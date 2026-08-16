@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Invoice Aging Calculator — how much is sitting unpaid?</title>
+<meta name="description" content="Free calculator: your unpaid invoices by age bucket and the cost of waiting. For food trucks, caterers, and small service businesses. No signup.">
+<style>
+:root{--bg:#0a0e14;--card:#161b22;--border:#30363d;--txt:#e6edf3;--dim:#8b949e;--acc:#4fc3f7;--red:#f85149}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;display:flex;justify-content:center;padding:40px 16px}
+.wrap{max-width:640px;width:100%}
+h1{font-size:1.7rem;margin-bottom:6px;text-align:center}h1 span{color:var(--acc)}
+.sub{color:var(--dim);text-align:center;margin-bottom:32px;font-size:.95rem}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:16px}
+label{display:block;color:var(--dim);font-size:.85rem;margin-bottom:8px;font-weight:600}
+.row{display:flex;gap:16px;flex-wrap:wrap}.field{flex:1;min-width:140px}
+input[type=number]{width:100%;background:#0d1117;border:1px solid var(--border);border-radius:8px;color:var(--txt);padding:12px;font-size:1.1rem}
+input:focus{outline:none;border-color:var(--acc)}
+.result{margin-top:24px;text-align:center;padding:28px;border-radius:12px;background:linear-gradient(135deg,#1a0f0f,#161b22);border:1px solid #f8514944}
+.big{font-size:2.8rem;font-weight:800;color:var(--red);margin:8px 0;font-variant-numeric:tabular-nums}
+.breakdown{color:var(--dim);font-size:.9rem}
+table{width:100%;border-collapse:collapse;margin-top:16px;font-size:.9rem}
+td{padding:6px 4px;border-bottom:1px solid var(--border);color:var(--txt)}td:last-child{text-align:right;color:var(--red);font-variant-numeric:tabular-nums}
+tr.head td{color:var(--dim);font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.cta{display:block;margin-top:24px;text-align:center;background:var(--acc);color:#001018;font-weight:700;padding:14px;border-radius:10px;text-decoration:none}
+footer{margin-top:24px;text-align:center;color:var(--dim);font-size:.8rem}
+</style></head>
+<body><div class="wrap">
+<h1>Invoice <span>Aging Calculator</span></h1>
+<p class="sub">The money you already earned but haven't been paid.</p>
+<div class="card">
+<div class="row">
+<div class="field"><label>Invoices unpaid: 0-30 days ($)</label><input type="number" id="b1" value="3000" min="0"></div>
+<div class="field"><label>31-60 days ($)</label><input type="number" id="b2" value="1500" min="0"></div>
+</div>
+<div class="row" style="margin-top:16px">
+<div class="field"><label>61-90 days ($)</label><input type="number" id="b3" value="800" min="0"></div>
+<div class="field"><label>90+ days ($)</label><input type="number" id="b4" value="400" min="0"></div>
+</div>
+</div>
+<div class="result">
+<div style="color:var(--dim);font-size:.85rem;text-transform:uppercase;letter-spacing:.08em">Total sitting unpaid</div>
+<div class="big" id="total">$—</div>
+<div class="breakdown" id="risk">—</div>
+<table id="tbl"><tr class="head"><td>Bucket</td><td>Amount</td></tr></table>
+</div>
+<a class="cta" href="mailto:absbm14@gmail.com?subject=CaterCollect%20—%20chase%20our%20invoices">▶ CaterCollect: the $150/mo desk that collects while you cook</a>
+<footer>Free tool. No signup. Risk read: 90+ days recovers ~50% without escalation; 30% with it.</footer>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+function calc(){
+const v=[+$('b1').value||0,+$('b2').value||0,+$('b3').value||0,+$('b4').value||0];
+const total=v[0]+v[1]+v[2]+v[3];
+$('total').textContent='$'+total.toLocaleString();
+const risky=v[2]+v[3];
+$('risk').textContent = risky>2000 ? '⚠ $'+risky.toLocaleString()+' in the hard-to-recover zone' : (risky>0 ? '$'+risky.toLocaleString()+' aging past 60 days' : 'all fresh — keep the cadence tight');
+const names=['0-30 (healthy)','31-60 (nudge now)','61-90 (escalate)','90+ (recover or write off)'];
+const tbl=$('tbl'); while(tbl.rows.length>1) tbl.deleteRow(1);
+names.forEach((n,i)=>{ if(v[i]>0){const r=tbl.insertRow(); r.insertCell(0).textContent=n; r.insertCell(1).textContent='$'+v[i].toLocaleString();}});
+}
+['b1','b2','b3','b4'].forEach(i=>$(i).addEventListener('input',calc));calc();
+</script></body></html>
