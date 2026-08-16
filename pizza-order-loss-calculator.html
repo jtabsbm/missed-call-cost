@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pizza Order-Loss Counter — What the Busy Signal Costs</title>
+<style>
+:root{--bg:#0a0e14;--card:#11161f;--line:#1e2733;--txt:#dce3ec;--dim:#8494a8;--acc:#39d98a;--acc2:#4da3ff;--warn:#f0b429}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;line-height:1.6}
+.wrap{max-width:880px;margin:0 auto;padding:40px 24px}
+h1{font-size:2rem;background:linear-gradient(90deg,#39d98a,#4da3ff);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:6px}
+.sub{color:var(--dim);margin-bottom:26px}
+label{display:block;color:var(--acc2);font-size:.85rem;margin:14px 0 4px;text-transform:uppercase;letter-spacing:.04em}
+input{width:100%;background:var(--card);border:1px solid var(--line);color:var(--txt);padding:10px 12px;border-radius:8px;font-size:1rem}
+input:focus{outline:none;border-color:var(--acc)}
+button{background:var(--acc);color:#04150c;font-weight:700;border:none;padding:12px 26px;border-radius:8px;font-size:1rem;margin:18px 0 8px;cursor:pointer}
+.out{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:20px;margin:14px 0}
+.big{font-size:2rem;color:var(--acc);font-weight:700}
+.row{display:flex;gap:14px;flex-wrap:wrap}
+.stat{flex:1;min-width:150px;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px}
+.stat .k{color:var(--dim);font-size:.78rem;text-transform:uppercase}
+.stat .v{font-size:1.3rem;font-weight:700}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:.9rem}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line)}
+th{color:var(--acc2)}td{color:var(--dim)}
+.note{color:var(--dim);font-size:.82rem;margin-top:10px}
+.footer{margin-top:40px;padding-top:18px;border-top:1px solid var(--line);color:var(--dim);font-size:.85rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>Pizza Order-Loss Counter</h1>
+<p class="sub">Friday 7pm, two lines jammed, third caller hangs up and dials the next shop. That is not a lost sale &mdash; it is a lost regular.</p>
+
+<label>Orders per night</label><input type="number" id="o" value="120" min="0">
+<label>Average ticket ($)</label><input type="number" id="t" value="38" min="0" step="1">
+<label>Missed-order rate (0-1)</label><input type="number" id="m" value="0.14" min="0" max="0.4" step="0.01">
+
+<button onclick="go()">Calculate</button>
+<div id="res" style="display:none">
+<div class="out"><div class="k" style="color:var(--dim);font-size:.8rem">ANNUAL CONTRIBUTION LOST TO MISSED ORDERS</div><div class="big" id="ann">$0</div><div class="note" id="tk"></div></div>
+<div class="row">
+<div class="stat"><div class="k">Missed orders/night</div><div class="v" id="mn">0</div></div>
+<div class="stat"><div class="k">Missed orders/year</div><div class="v" id="my">0</div></div>
+<div class="stat"><div class="k">Full-ticket loss</div><div class="v" id="ft">$0</div></div>
+</div>
+<h3 style="color:var(--acc2);margin-top:18px">Levers, ranked by recovery</h3>
+<table><tr><th>Lever</th><th>Cost/mo</th><th>Recovers/yr</th><th>Note</th></tr><tbody id="fx"></tbody></table>
+<p class="note">Model: 10-18% missed-order rate without full coverage (default 14%); 360 nights/yr; contribution = 68% of ticket (32% food cost). Benchmark, not audit.</p>
+</div>
+
+<p class="sub" style="margin-top:14px">Open CLI: <b>pizza_order_loss.py</b> in the repo.</p>
+<a href="mailto:absbm14@gmail.com?subject=Pizza%20Order-Loss%20Analysis" style="display:inline-block;background:var(--acc);color:#04150c;font-weight:700;padding:11px 22px;border-radius:8px;text-decoration:none;margin-top:8px">Request an analysis &#8594;</a>
+<div class="footer">Built by James Thompson &middot; absbm14@gmail.com &middot; <a href="https://jtabsbm.github.io/callbackops-tools/" style="color:var(--acc2)">All tools</a></div>
+</div>
+<script>
+function fmt(n){return '$'+Math.round(n).toLocaleString()}
+function go(){
+var o=parseFloat(document.getElementById('o').value)||0,
+    t=parseFloat(document.getElementById('t').value)||0,
+    m=parseFloat(document.getElementById('m').value)||0;
+var mn=o*m, my=mn*360, ft=my*t, ann=ft*0.68;
+document.getElementById('res').style.display='block';
+document.getElementById('ann').textContent=fmt(ann);
+document.getElementById('tk').textContent='Full-ticket value: '+fmt(ft)+' (contribution shown — what actually hits your pocket).';
+document.getElementById('mn').textContent=mn.toFixed(1);
+document.getElementById('my').textContent=Math.round(my);
+document.getElementById('ft').textContent=fmt(ft);
+var lev=[['Voicemail + text-back ordering link',0,ann*0.40,'Missed callers self-serve'],['Overflow answering (peak 5-9pm)',149,ann*0.55,'Live capture in the only window that matters'],['Late-night coverage extension',99,ann*0.18,'Impulse + high-ticket night orders']];
+var rows='';
+for(var i=0;i<lev.length;i++){
+ var pay=lev[i][1]===0?'instant':(lev[i][1]/(lev[i][2]/12)).toFixed(1)+' mo';
+ rows+='<tr><td>'+lev[i][0]+'</td><td>'+fmt(lev[i][1])+'</td><td>'+fmt(lev[i][2])+'</td><td>'+lev[i][3]+'</td></tr>';
+}
+document.getElementById('fx').innerHTML=rows;
+}
+go();
+</script>
+</body>
+</html>

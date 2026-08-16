@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>No-Show Cost Calculator — What Empty Tables Cost Your Restaurant</title>
+<style>
+:root{--bg:#0a0e14;--card:#11161f;--line:#1e2733;--txt:#dce3ec;--dim:#8494a8;--acc:#39d98a;--acc2:#4da3ff;--warn:#f0b429}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;line-height:1.6}
+.wrap{max-width:880px;margin:0 auto;padding:40px 24px}
+h1{font-size:2rem;background:linear-gradient(90deg,#39d98a,#4da3ff);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:6px}
+.sub{color:var(--dim);margin-bottom:26px}
+label{display:block;color:var(--acc2);font-size:.85rem;margin:14px 0 4px;text-transform:uppercase;letter-spacing:.04em}
+input{width:100%;background:var(--card);border:1px solid var(--line);color:var(--txt);padding:10px 12px;border-radius:8px;font-size:1rem}
+input:focus{outline:none;border-color:var(--acc)}
+button{background:var(--acc);color:#04150c;font-weight:700;border:none;padding:12px 26px;border-radius:8px;font-size:1rem;margin:18px 0 8px;cursor:pointer}
+.out{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:20px;margin:14px 0}
+.big{font-size:2rem;color:var(--acc);font-weight:700}
+.range{display:flex;gap:10px;margin:10px 0}
+.range div{flex:1;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:10px;text-align:center}
+.range .k{color:var(--dim);font-size:.72rem;text-transform:uppercase}
+.range .v{font-weight:700;font-size:1.1rem}
+.row{display:flex;gap:14px;flex-wrap:wrap}
+.stat{flex:1;min-width:140px;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px}
+.stat .k{color:var(--dim);font-size:.78rem;text-transform:uppercase}
+.stat .v{font-size:1.3rem;font-weight:700}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:.9rem}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line)}
+th{color:var(--acc2)}td{color:var(--dim)}
+.note{color:var(--dim);font-size:.82rem;margin-top:10px}
+.footer{margin-top:40px;padding-top:18px;border-top:1px solid var(--line);color:var(--dim);font-size:.85rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>No-Show Cost Calculator</h1>
+<p class="sub">A party of four that never walks in burns a table for the whole turn. Run your numbers &mdash; see what empty seats cost per year.</p>
+
+<label>Covers per night</label><input type="number" id="c" value="90" min="0">
+<label>Average check per person ($)</label><input type="number" id="a" value="62" min="0" step="1">
+<label>Average party size</label><input type="number" id="p" value="2.4" min="1" max="20" step="0.1">
+
+<button onclick="go()">Calculate</button>
+<div id="res" style="display:none">
+<div class="out"><div class="k" style="color:var(--dim);font-size:.8rem">ANNUAL NO-SHOW LOSS</div><div class="big" id="mid">$0</div>
+<div class="range">
+<div><div class="k">Conservative (15%)</div><div class="v" id="lo">$0</div></div>
+<div><div class="k">Likely (22%)</div><div class="v" id="md">$0</div></div>
+<div><div class="k">Worst (30%)</div><div class="v" id="hi">$0</div></div>
+</div></div>
+<div class="row">
+<div class="stat"><div class="k">No-show parties/week</div><div class="v" id="wk">0</div></div>
+<div class="stat"><div class="k">Empty table-nights/yr</div><div class="v" id="tn">0</div></div>
+</div>
+<h3 style="color:var(--acc2);margin-top:18px">Policies, ranked by recovery</h3>
+<table><tr><th>Policy</th><th>Cost/mo</th><th>Recovers/yr</th><th>Note</th></tr><tbody id="fx"></tbody></table>
+<p class="note">Model: 15-30% no-show rate on reservations (industry range); 70% of parties reserve; 360 nights/yr; card-guarantee cuts no-shows 60-80%; confirmation texts 30-40%. Benchmark, not audit.</p>
+</div>
+
+<p class="sub" style="margin-top:14px">Open CLI behind this page: <b>no_show_cost.py</b> in the repo.</p>
+<a href="mailto:absbm14@gmail.com?subject=No-Show%20Cost%20Analysis" style="display:inline-block;background:var(--acc);color:#04150c;font-weight:700;padding:11px 22px;border-radius:8px;text-decoration:none;margin-top:8px">Request an analysis &#8594;</a>
+<div class="footer">Built by James Thompson &middot; absbm14@gmail.com &middot; <a href="https://jtabsbm.github.io/callbackops-tools/" style="color:var(--acc2)">All tools</a></div>
+</div>
+<script>
+function fmt(n){return '$'+Math.round(n).toLocaleString()}
+function go(){
+var c=parseFloat(document.getElementById('c').value)||0,
+    a=parseFloat(document.getElementById('a').value)||0,
+    p=parseFloat(document.getElementById('p').value)||1;
+var parties=c/p, reserved=parties*0.70;
+function loss(r){return reserved*r*p*a*360}
+var lo=loss(0.15), md=loss(0.22), hi=loss(0.30);
+document.getElementById('res').style.display='block';
+document.getElementById('mid').textContent=fmt(md);
+document.getElementById('lo').textContent=fmt(lo);
+document.getElementById('md').textContent=fmt(md);
+document.getElementById('hi').textContent=fmt(hi);
+document.getElementById('wk').textContent=(reserved*0.22*7).toFixed(1);
+document.getElementById('tn').textContent=Math.round(reserved*0.22*360);
+var pol=[['Card-guarantee on peak nights',0,md*0.45*0.70,'60-80% cut on Fri-Sat volume'],['Automated confirmation texts',29,md*0.30*0.40,'48h + 3h reminders'],['Waitlist auto-backfill',99,md*0.50,'Refills cancellations in minutes']];
+var rows='';
+for(var i=0;i<pol.length;i++){
+ var pay=pol[i][1]===0?'instant':(pol[i][1]/(pol[i][2]/12)).toFixed(1)+' mo';
+ rows+='<tr><td>'+pol[i][0]+'</td><td>'+fmt(pol[i][1])+'</td><td>'+fmt(pol[i][2])+'</td><td>'+pol[i][3]+'</td></tr>';
+}
+document.getElementById('fx').innerHTML=rows;
+}
+go();
+</script>
+</body>
+</html>

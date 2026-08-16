@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tee-Time Loss Calculator — The Revenue Sitting on Your Tee Sheet</title>
+<style>
+:root{--bg:#0a0e14;--card:#11161f;--line:#1e2733;--txt:#dce3ec;--dim:#8494a8;--acc:#39d98a;--acc2:#4da3ff}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;line-height:1.6}
+.wrap{max-width:880px;margin:0 auto;padding:40px 24px}
+h1{font-size:2rem;background:linear-gradient(90deg,#39d98a,#4da3ff);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:6px}
+.sub{color:var(--dim);margin-bottom:26px}
+label{display:block;color:var(--acc2);font-size:.85rem;margin:14px 0 4px;text-transform:uppercase;letter-spacing:.04em}
+input{width:100%;background:var(--card);border:1px solid var(--line);color:var(--txt);padding:10px 12px;border-radius:8px;font-size:1rem}
+input:focus{outline:none;border-color:var(--acc)}
+button{background:var(--acc);color:#04150c;font-weight:700;border:none;padding:12px 26px;border-radius:8px;font-size:1rem;margin:18px 0 8px;cursor:pointer}
+.out{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:20px;margin:14px 0}
+.big{font-size:2rem;color:var(--acc);font-weight:700}
+.row{display:flex;gap:14px;flex-wrap:wrap}
+.stat{flex:1;min-width:150px;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px}
+.stat .k{color:var(--dim);font-size:.78rem;text-transform:uppercase}
+.stat .v{font-size:1.3rem;font-weight:700}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:.9rem}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line)}
+th{color:var(--acc2)}td{color:var(--dim)}
+.note{color:var(--dim);font-size:.82rem;margin-top:10px}
+.footer{margin-top:40px;padding-top:18px;border-top:1px solid var(--line);color:var(--dim);font-size:.85rem}
+.bar{height:10px;background:var(--card);border-radius:5px;overflow:hidden;margin:6px 0 2px}
+.bar div{height:100%;background:linear-gradient(90deg,#39d98a,#4da3ff)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>Tee-Time Loss Calculator</h1>
+<p class="sub">An unsold tee time is the only inventory in golf that expires worthless at sunset. Price it like airlines price seats.</p>
+
+<label>Rounds played per day</label><input type="number" id="r" value="110" min="0">
+<label>Average green fee ($)</label><input type="number" id="f" value="58" min="0">
+<label>Current tee-sheet utilization (0-1)</label><input type="number" id="u" value="0.62" min="0" max="1" step="0.01">
+
+<button onclick="go()">Calculate</button>
+<div id="res" style="display:none">
+<div class="out"><div class="k" style="color:var(--dim);font-size:.8rem">ANNUAL REVENUE LEFT ON THE TEE SHEET</div><div class="big" id="ann">$0</div>
+<div class="bar"><div id="barfill" style="width:62%"></div></div>
+<div class="note" id="barnote"></div>
+<div class="note" id="upl" style="color:var(--acc)"></div></div>
+<div class="row">
+<div class="stat"><div class="k">Unsold rounds/day</div><div class="v" id="ud">0</div></div>
+<div class="stat"><div class="k">Daily capacity</div><div class="v" id="cap">0</div></div>
+<div class="stat"><div class="k">Utilization gap</div><div class="v" id="gap">0%</div></div>
+</div>
+<h3 style="color:var(--acc2);margin-top:18px">Levers, ranked by recovery</h3>
+<table><tr><th>Lever</th><th>Cost/mo</th><th>Recovers/yr</th><th>Payback</th><th>Note</th></tr><tbody id="fx"></tbody></table>
+<p class="note">Model: 85% practical ceiling; 360 days; dynamic pricing recovers ~35% of gap (8-15% total-revenue lift studies scaled). Benchmark, not audit.</p>
+</div>
+
+<p class="sub" style="margin-top:14px">Open CLI: <b>tee_time_loss.py</b> in the repo.</p>
+<a href="mailto:absbm14@gmail.com?subject=Tee-Time%20Pricing%20Analysis" style="display:inline-block;background:var(--acc);color:#04150c;font-weight:700;padding:11px 22px;border-radius:8px;text-decoration:none;margin-top:8px">Request an analysis &#8594;</a>
+<div class="footer">Built by James Thompson &middot; absbm14@gmail.com &middot; <a href="https://jtabsbm.github.io/callbackops-tools/" style="color:var(--acc2)">All tools</a></div>
+</div>
+<script>
+function fmt(n){return '$'+Math.round(n).toLocaleString()}
+function go(){
+var r=parseFloat(document.getElementById('r').value)||0,
+    f=parseFloat(document.getElementById('f').value)||0,
+    u=parseFloat(document.getElementById('u').value)||0;
+if(u<=0){u=0.01}
+var ceil=0.85, cap=r/u, gap=Math.max(0,ceil-u), ud=cap*gap, ann=ud*360*f;
+var cur=r*f*360; // current annual revenue (rounds played x fee x days)
+document.getElementById('res').style.display='block';
+document.getElementById('ann').textContent=fmt(ann);
+document.getElementById('barfill').style.width=Math.round(u*100)+'%';
+document.getElementById('barnote').textContent='You fill '+Math.round(u*100)+'% of capacity; practical ceiling is 85%.';
+document.getElementById('upl').textContent='Dynamic pricing on this sheet: +'+fmt(cur*0.08)+' to +'+fmt(cur*0.15)+'/yr (industry 8-15% lift on perishable inventory).';
+document.getElementById('ud').textContent=ud.toFixed(1);
+document.getElementById('cap').textContent=cap.toFixed(0);
+document.getElementById('gap').textContent=Math.round(gap*100)+'%';
+var lev=[['Dynamic pricing',199,ann*0.35,'8-15% lift; peak premium + trough discounts'],['Twilight re-pricing tiers',0,ann*0.18,'Steps prices down the afternoon decay curve'],['Last-minute inventory push',49,ann*0.12,'Moves same-day holes at discount vs zero']];
+var rows='';
+for(var i=0;i<lev.length;i++){
+ var pay=lev[i][1]===0?'instant':(lev[i][1]/(lev[i][2]/12)).toFixed(1)+' mo';
+ rows+='<tr><td>'+lev[i][0]+'</td><td>'+fmt(lev[i][1])+'</td><td>'+fmt(lev[i][2])+'</td><td>'+pay+'</td><td>'+lev[i][3]+'</td></tr>';
+}
+document.getElementById('fx').innerHTML=rows;
+}
+go();
+</script>
+</body>
+</html>

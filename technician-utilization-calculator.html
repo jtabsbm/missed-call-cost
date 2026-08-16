@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Technician Utilization Calculator — CallbackOps</title>
+<style>
+:root{--bg:#0a0e14;--card:#161b22;--border:#30363d;--txt:#e6edf3;--dim:#8b949e;--acc:#4fc3f7;--red:#f85149;--grn:#3fb950}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;display:flex;justify-content:center;padding:40px 16px}
+.wrap{max-width:640px;width:100%}
+h1{font-size:1.7rem;margin-bottom:6px;text-align:center}h1 span{color:var(--acc)}
+.sub{color:var(--dim);text-align:center;margin-bottom:28px;font-size:.95rem}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:16px}
+label{display:block;color:var(--dim);font-size:.85rem;margin-bottom:8px;font-weight:600}
+.row{display:flex;gap:16px;flex-wrap:wrap}
+.field{flex:1;min-width:130px}
+input[type=number]{width:100%;background:#0d1117;border:1px solid var(--border);border-radius:8px;color:var(--txt);padding:12px;font-size:1.1rem}
+input:focus{outline:none;border-color:var(--acc)}
+.kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-top:20px}
+.kpi .box{background:#0d1117;border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center}
+.kpi .val{font-size:1.7rem;font-weight:800}
+.kpi .lbl{color:var(--dim);font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;margin-top:4px}
+.red{color:var(--red)}.grn{color:var(--grn)}.blu{color:var(--acc)}
+.note{color:var(--dim);font-size:.88rem;margin-top:14px;line-height:1.5}
+.cta{display:block;margin-top:20px;text-align:center;background:var(--acc);color:#001018;font-weight:700;padding:15px;border-radius:10px;text-decoration:none}
+footer{margin-top:20px;text-align:center;color:var(--dim);font-size:.8rem}
+</style>
+</head>
+<body><div class="wrap">
+<h1>Technician <span>Utilization Calculator</span></h1>
+<p class="sub">Dispatch gaps are silent revenue leaks. Size yours in 30 seconds.</p>
+<div class="card">
+<div class="row">
+<div class="field"><label>Technicians</label><input type="number" id="techs" value="6" min="1"></div>
+<div class="field"><label>Billable hrs target/day</label><input type="number" id="hrs" value="6" min="1" max="10" step="0.5"></div>
+</div>
+<div class="row" style="margin-top:16px">
+<div class="field"><label>Avg billing rate ($/hr)</label><input type="number" id="rate" value="125" min="1"></div>
+<div class="field"><label>Actual billable hrs/day</label><input type="number" id="actual" value="4.5" min="0" max="10" step="0.5"></div>
+</div>
+</div>
+<div class="card">
+<div class="kpi">
+<div class="box"><div class="val blu" id="util">–</div><div class="lbl">Utilization</div></div>
+<div class="box"><div class="val red" id="daily">–</div><div class="lbl">Revenue lost / day</div></div>
+<div class="box"><div class="val red" id="annual">–</div><div class="lbl">Lost / year</div></div>
+<div class="box"><div class="val grn" id="roi">–</div><div class="lbl">Dispatcher ROI</div></div>
+</div>
+<p class="note" id="note"></p>
+</div>
+<a class="cta" href="mailto:absbm14@gmail.com?subject=Fill%20my%20dispatch%20gaps%20—%20CallbackOps">Keep every tech at full utilization → CallbackOps dispatch desk</a>
+<footer>Built by James Thompson · absbm14@gmail.com · <a href="https://jtabsbm.github.io/callbackops-tools/" style="color:var(--acc)">All free tools</a></footer>
+</div>
+<script>
+function fmt(n){return '$' + Math.round(n).toLocaleString()}
+function calc(){
+  const techs = +document.getElementById('techs').value || 0;
+  const target = +document.getElementById('hrs').value || 0;
+  const rate = +document.getElementById('rate').value || 0;
+  const actual = +document.getElementById('actual').value || 0;
+  const util = target ? Math.round(actual / target * 100) : 0;
+  const gapHrs = Math.max(0, target - actual);
+  const daily = techs * gapHrs * rate;
+  const annual = daily * 250;
+  const dispatcherCost = 52000; // $25/hr × 2000hr
+  const roi = daily * 250 > 0 ? ((annual * 0.35 - dispatcherCost) / dispatcherCost * 100) : 0; // recover 35% of gaps
+  document.getElementById('util').textContent = util + '%';
+  document.getElementById('daily').textContent = fmt(daily);
+  document.getElementById('annual').textContent = fmt(annual);
+  document.getElementById('roi').textContent = roi > 0 ? roi + '%' : '—';
+  document.getElementById('note').textContent = `Each of your ${techs} techs averages ${gapHrs.toFixed(1)} non-billable hours daily. At ${fmt(rate)}/hr that is ${fmt(daily)}/day walking out the door — usually while they wait for the next job to be booked. A dispatch+lead-recovery layer that fills just 35% of those gaps pays for itself ${roi > 0 ? Math.round(roi/100) + 'x over' : ''} a $52K/yr coordinator.`;
+}
+['techs','hrs','rate','actual'].forEach(i => document.getElementById(i).addEventListener('input', calc));
+calc();
+</script>
+</body></html>

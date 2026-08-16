@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Review Response Generator — CallbackOps</title>
+<style>
+:root{--bg:#0a0e14;--card:#161b22;--border:#30363d;--txt:#e6edf3;--dim:#8b949e;--acc:#4fc3f7;--grn:#3fb950}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;display:flex;justify-content:center;padding:40px 16px}
+.wrap{max-width:680px;width:100%}
+h1{font-size:1.7rem;margin-bottom:6px;text-align:center}h1 span{color:var(--acc)}
+.sub{color:var(--dim);text-align:center;margin-bottom:24px;font-size:.95rem}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:16px}
+label{display:block;color:var(--dim);font-size:.85rem;margin-bottom:6px;font-weight:600}
+textarea,input[type=text]{width:100%;background:#0d1117;border:1px solid var(--border);border-radius:8px;color:var(--txt);padding:12px;font-size:.95rem;font-family:inherit}
+textarea{min-height:110px;resize:vertical}
+.row{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px}
+.field{flex:1;min-width:140px}
+button{background:var(--acc);color:#001018;border:none;border-radius:8px;padding:12px 24px;font-weight:700;font-size:1rem;cursor:pointer;margin-top:16px;width:100%}
+button:hover{filter:brightness(1.1)}
+.output{border-left:3px solid var(--acc);background:#0d1117;border-radius:0 8px 8px 0;padding:14px 16px;margin-top:10px;font-size:.92rem;white-space:pre-wrap;color:var(--txt)}
+.output .tone{color:var(--acc);font-weight:700;font-size:.8rem;text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:6px}
+.copy{font-size:.75rem;color:var(--dim);cursor:pointer;float:right}
+.copy:hover{color:var(--acc)}
+.cta{display:block;margin-top:20px;text-align:center;background:var(--acc);color:#001018;font-weight:700;padding:15px;border-radius:10px;text-decoration:none}
+footer{margin-top:20px;text-align:center;color:var(--dim);font-size:.8rem}
+</style>
+</head>
+<body><div class="wrap">
+<h1>Review Response <span>Generator</span></h1>
+<p class="sub">Paste any customer review + your business name. Get 3 professional responses in different tones.</p>
+<div class="card">
+<label>Paste the customer review (good or bad):</label>
+<textarea id="review" placeholder="e.g. 'Tech was great but nobody answered the phone for two days when I called to rebook...'"></textarea>
+<div class="row">
+<div class="field"><label>Business name</label><input type="text" id="biz" placeholder="Acme HVAC"></div>
+<div class="field"><label>Reviewer name (if known)</label><input type="text" id="name" placeholder="optional"></div>
+</div>
+<button id="go">Generate 3 responses</button>
+</div>
+<div id="out"></div>
+<a class="cta" href="mailto:absbm14@gmail.com?subject=Never%20miss%20a%20review-worthy%20customer%20again%20—%20CallbackOps">Reviews are earned before the job — reply to every lead in 5 min → CallbackOps</a>
+<footer>Built by James Thompson · absbm14@gmail.com · <a href="https://jtabsbm.github.io/callbackops-tools/" style="color:var(--acc)">All free tools</a></footer>
+</div>
+<script>
+document.getElementById('go').addEventListener('click', () => {
+  const rv = document.getElementById('review').value.trim();
+  const biz = document.getElementById('biz').value.trim() || 'our team';
+  const nm = document.getElementById('name').value.trim();
+  const hi = nm ? 'Hi ' + nm + ', ' : 'Hi, ';
+  const sentiment = /no |never|worst|terrible|awful|didn'?t|doesn'?t|won'?t|horrible|angry|frustrat|disappoint|late|rude|broken/i.test(rv) ? 'bad' : 'good';
+  const first = rv.split(/[.!?]/)[0].slice(0, 70) || 'your experience';
+  let outputs;
+  if (sentiment === 'bad') {
+    outputs = [
+      ['Empathetic', hi + 'thank you for taking the time to share this. ' + (nm ? nm + ', w' : 'W') + 'e hold ourselves to a high standard and it sounds like we fell short — that is on us, not you. I have reviewed what happened and shared it directly with our team. Could you call or text me directly at your convenience? I would like to make this right personally.\n\n— ' + biz + ' management'],
+      ['Apologetic + concrete', hi + 'you are right, and I apologize. ' + first.charAt(0).toUpperCase() + first.slice(1) + ' is not the experience we promise. Here is what we are doing: (1) reviewing what went wrong, (2) fixing it with our scheduling team this week, and (3) offering you a direct line to management so it never repeats. Please reach out — we would welcome the chance to restore your confidence.\n\n— ' + biz],
+      ['Inviting back', hi + 'we would like another shot. Your feedback about "' + first + '..." is exactly what we needed to hear, and we have already made changes because of it. If you are willing to give us another try, contact us directly and ask for management — we will take care of you personally.\n\n— ' + biz],
+    ];
+  } else {
+    outputs = [
+      ['Warm + referral ask', hi + 'thank you so much for the kind words! Reviews like yours are why we love serving this community. If you know a neighbor or friend who could use our help, we would be grateful for the introduction — and as always, thank you for choosing ' + biz + '.'],
+      ['Personal + specific', hi + 'this made our week. ' + first.charAt(0).toUpperCase() + first.slice(1) + ' — we love hearing that the details mattered. We will keep showing up on time and doing it right. See you at your next service!\n\n— ' + biz],
+      ['Community-minded', hi + 'thank you! We live and work here too, so neighbors like you are the whole point. If anything ever falls short of this experience, call us directly and we will make it right — that is our promise at ' + biz + '.'],
+    ];
+  }
+  const out = document.getElementById('out');
+  out.innerHTML = '';
+  outputs.forEach(([tone, text], i) => {
+    const d = document.createElement('div');
+    d.className = 'output';
+    d.innerHTML = '<span class="tone">' + tone + ' <span class="copy" data-i="' + i + '">copy</span></span>';
+    const span = document.createElement('span');
+    span.textContent = text;
+    d.appendChild(span);
+    d.dataset.text = text;
+    out.appendChild(d);
+  });
+  out.querySelectorAll('.copy').forEach(c => c.addEventListener('click', e => {
+    navigator.clipboard.writeText(e.target.closest('.output').dataset.text);
+    e.target.textContent = 'copied!';
+    setTimeout(() => e.target.textContent = 'copy', 1500);
+  }));
+});
+</script>
+</body></html>

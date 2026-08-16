@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>After-Hours Loss Estimator — What Happens When You Clock Out</title>
+<style>
+:root{--bg:#0a0e14;--card:#11161f;--line:#1e2733;--txt:#dce3ec;--dim:#8494a8;--acc:#39d98a;--acc2:#4da3ff}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;line-height:1.6}
+.wrap{max-width:880px;margin:0 auto;padding:40px 24px}
+h1{font-size:2rem;background:linear-gradient(90deg,#39d98a,#4da3ff);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:6px}
+.sub{color:var(--dim);margin-bottom:26px}
+label{display:block;color:var(--acc2);font-size:.85rem;margin:14px 0 4px;text-transform:uppercase;letter-spacing:.04em}
+input{width:100%;background:var(--card);border:1px solid var(--line);color:var(--txt);padding:10px 12px;border-radius:8px;font-size:1rem}
+input:focus{outline:none;border-color:var(--acc)}
+button{background:var(--acc);color:#04150c;font-weight:700;border:none;padding:12px 26px;border-radius:8px;font-size:1rem;margin:18px 0 8px;cursor:pointer}
+button:hover{filter:brightness(1.1)}
+.out{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:20px;margin:14px 0}
+.big{font-size:2rem;color:var(--acc);font-weight:700}
+.row{display:flex;gap:14px;flex-wrap:wrap}
+.stat{flex:1;min-width:150px;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px}
+.stat .k{color:var(--dim);font-size:.78rem;text-transform:uppercase}
+.stat .v{font-size:1.3rem;font-weight:700}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:.9rem}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line)}
+th{color:var(--acc2)}td{color:var(--dim)}
+.note{color:var(--dim);font-size:.82rem;margin-top:10px}
+.footer{margin-top:40px;padding-top:18px;border-top:1px solid var(--line);color:var(--dim);font-size:.85rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>After-Hours Loss Estimator</h1>
+<p class="sub">Your phone does not clock out at 5pm &mdash; your coverage does. See what the evening ring costs you per year.</p>
+
+<label>Weekly inbound calls</label><input type="number" id="c" value="40" min="0">
+<label>Average job value ($)</label><input type="number" id="v" value="450" min="0" step="50">
+<label>Close rate (0-1)</label><input type="number" id="r" value="0.25" min="0" max="1" step="0.05">
+<label>Hours covered per day</label><input type="number" id="h" value="8" min="0" max="24" step="1">
+
+<button onclick="go()">Estimate</button>
+<div id="res" style="display:none">
+<div class="out"><div class="k" style="color:var(--dim);font-size:.8rem">ANNUAL AFTER-HOURS LOSS</div><div class="big" id="ann">$0</div></div>
+<div class="row">
+<div class="stat"><div class="k">After-hours calls/wk</div><div class="v" id="ah">0</div></div>
+<div class="stat"><div class="k">Lost per week</div><div class="v" id="lw">$0</div></div>
+<div class="stat"><div class="k">Evening share</div><div class="v" id="sh">0%</div></div>
+</div>
+<h3 style="color:var(--acc2);margin-top:18px">Fixes, ranked by payback</h3>
+<table><tr><th>Fix</th><th>Cost/mo</th><th>Recovers/yr</th><th>Payback</th></tr><tbody id="fx"></tbody></table>
+<p class="note">Model: after-hours share derived from your covered hours (62% baseline at 8h); 95% of unaided after-hours calls hit voicemail; 35% of those callers would book if reached fast. Benchmark, not audit.</p>
+</div>
+
+<p class="sub" style="margin-top:14px">Open CLI behind this page: <b>after_hours.py</b> in the repo.</p>
+<a href="mailto:absbm14@gmail.com?subject=After-Hours%20Loss%20Analysis" style="display:inline-block;background:var(--acc);color:#04150c;font-weight:700;padding:11px 22px;border-radius:8px;text-decoration:none;margin-top:8px">Request an analysis &#8594;</a>
+<div class="footer">Built by James Thompson &middot; absbm14@gmail.com &middot; <a href="https://jtabsbm.github.io/callbackops-tools/" style="color:var(--acc2)">All tools</a></div>
+</div>
+<script>
+function fmt(n){return '$'+Math.round(n).toLocaleString()}
+function go(){
+var c=parseFloat(document.getElementById('c').value)||0,
+    v=parseFloat(document.getElementById('v').value)||0,
+    r=parseFloat(document.getElementById('r').value)||0,
+    h=parseFloat(document.getElementById('h').value)||8;
+var sh=Math.min(0.75,0.62*(16/Math.max(8,24-h)));
+var ah=c*sh, lw=ah*0.95*0.35*v*r, ann=lw*52;
+document.getElementById('res').style.display='block';
+document.getElementById('ann').textContent=fmt(ann);
+document.getElementById('ah').textContent=ah.toFixed(1);
+document.getElementById('lw').textContent=fmt(lw);
+document.getElementById('sh').textContent=Math.round(sh*100)+'%';
+var fixes=[['Answering service ($1.20/call)',ah*4.33*1.2,0.55],['Callback-SLA automation ($99/mo)',99,0.40],['Schedule-extender ($0)',0,0.15]];
+var rows='';
+for(var i=0;i<fixes.length;i++){
+ var rec=ann*fixes[i][2], pay=fixes[i][1]===0?'instant':(fixes[i][1]/(rec/12)).toFixed(1)+' mo';
+ rows+='<tr><td>'+fixes[i][0]+'</td><td>'+fmt(fixes[i][1])+'</td><td>'+fmt(rec)+'</td><td>'+pay+'</td></tr>';
+}
+document.getElementById('fx').innerHTML=rows;
+}
+go();
+</script>
+</body>
+</html>
