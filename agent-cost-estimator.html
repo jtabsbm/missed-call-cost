@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Agent Cost Estimator — what do your agents cost per client?</title>
+<meta name="description" content="Free calculator: monthly AI agent API costs per client. Find which retainers are underwater. No signup.">
+<style>
+:root{--bg:#0a0e14;--card:#161b22;--border:#30363d;--txt:#e6edf3;--dim:#8b949e;--acc:#4fc3f7;--red:#f85149;--grn:#3fb950}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;display:flex;justify-content:center;padding:40px 16px}
+.wrap{max-width:640px;width:100%}
+h1{font-size:1.7rem;margin-bottom:6px;text-align:center}h1 span{color:var(--acc)}
+.sub{color:var(--dim);text-align:center;margin-bottom:32px;font-size:.95rem}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:16px}
+label{display:block;color:var(--dim);font-size:.85rem;margin-bottom:8px;font-weight:600}
+.row{display:flex;gap:16px;flex-wrap:wrap}.field{flex:1;min-width:140px}
+input[type=number]{width:100%;background:#0d1117;border:1px solid var(--border);border-radius:8px;color:var(--txt);padding:12px;font-size:1.1rem}
+input:focus{outline:none;border-color:var(--acc)}
+.result{margin-top:24px;text-align:center;padding:28px;border-radius:12px;background:linear-gradient(135deg,#1a0f0f,#161b22);border:1px solid #f8514944}
+.big{font-size:2.8rem;font-weight:800;color:var(--red);margin:8px 0;font-variant-numeric:tabular-nums}
+.breakdown{color:var(--dim);font-size:.9rem}.good{color:var(--grn)}
+.cta{display:block;margin-top:24px;text-align:center;background:var(--acc);color:#001018;font-weight:700;padding:14px;border-radius:10px;text-decoration:none}
+footer{margin-top:24px;text-align:center;color:var(--dim);font-size:.8rem}
+</style></head>
+<body><div class="wrap">
+<h1>AI Agent <span>Cost Estimator</span></h1>
+<p class="sub">What do your AI agents really cost per client, per month?</p>
+<div class="card">
+<div class="row">
+<div class="field"><label>Agent runs per day (all clients)</label><input type="number" id="runs" value="200" min="1"></div>
+<div class="field"><label>Avg tokens per run (k)</label><input type="number" id="tokens" value="8" min="1"></div>
+</div>
+<div class="row" style="margin-top:16px">
+<div class="field"><label>Model cost per 1M tokens ($)</label><input type="number" id="rate" value="5" min="0.1" step="0.1"></div>
+<div class="field"><label>Number of clients</label><input type="number" id="clients" value="10" min="1"></div>
+</div>
+</div>
+<div class="result">
+<div style="color:var(--dim);font-size:.85rem;text-transform:uppercase;letter-spacing:.08em">Estimated monthly agent spend</div>
+<div class="big" id="monthly">$—</div>
+<div class="breakdown" id="perclient">per client: $—</div>
+<div class="breakdown" id="verdict" style="margin-top:8px"></div>
+</div>
+<a class="cta" href="mailto:absbm14@gmail.com?subject=TokenTally%20—%20meter%20my%20agents">▶ TokenTally: meter every run before the invoice surprises you</a>
+<footer>Free tool. No signup. Math: runs × days(30) × tokens × rate ÷ 1M. Margin check compares to a $2,000 retainer.</footer>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+function calc(){
+const runs=+$('runs').value||0, tok=+$('tokens').value||0, rate=+$('rate').value||0, cl=+$('clients').value||1;
+const m=runs*30*tok*1000*rate/1e6;
+$('monthly').textContent='$'+m.toLocaleString(undefined,{maximumFractionDigits:0});
+const pc=m/cl;
+$('perclient').textContent='per client: $'+pc.toLocaleString(undefined,{maximumFractionDigits:0});
+const share=pc/2000*100;
+$('verdict').textContent = share>15 ? '⚠ '+share.toFixed(0)+'% of a $2,000 retainer — margin leak' : '✓ '+share.toFixed(0)+'% of a $2,000 retainer — '+(share>8?'watch it':'healthy');
+}
+['runs','tokens','rate','clients'].forEach(i=>$(i).addEventListener('input',calc));calc();
+</script></body></html>
