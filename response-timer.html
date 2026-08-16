@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inquiry Response Timer — how fast do you really reply?</title>
+<meta name="description" content="Free: time your real inquiry response across a week. Couples and clients book the first responder. No signup.">
+<style>
+:root{--bg:#0a0e14;--card:#161b22;--border:#30363d;--txt:#e6edf3;--dim:#8b949e;--acc:#4fc3f7;--red:#f85149;--grn:#3fb950}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;display:flex;justify-content:center;padding:40px 16px}
+.wrap{max-width:640px;width:100%}
+h1{font-size:1.7rem;margin-bottom:6px;text-align:center}h1 span{color:var(--acc)}
+.sub{color:var(--dim);text-align:center;margin-bottom:32px;font-size:.95rem}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:16px;text-align:center}
+button{background:var(--acc);color:#001018;border:none;border-radius:8px;padding:12px 24px;font-size:1rem;font-weight:700;cursor:pointer;margin:4px}
+button.stop{background:var(--red);color:#fff}
+.clock{font-size:3rem;font-weight:800;margin:16px 0;font-variant-numeric:tabular-nums}
+.log{text-align:left;font-size:.9rem;color:var(--dim)}
+.log div{padding:6px 0;border-bottom:1px solid var(--border)}
+.avg{margin-top:16px;font-size:1.1rem}
+.cta{display:block;margin-top:24px;text-align:center;background:var(--acc);color:#001018;font-weight:700;padding:14px;border-radius:10px;text-decoration:none}
+footer{margin-top:24px;text-align:center;color:var(--dim);font-size:.8rem}
+</style></head>
+<body><div class="wrap">
+<h1>Inquiry <span>Response Timer</span></h1>
+<p class="sub">The first responder usually wins the booking. Time yourself honestly.</p>
+<div class="card">
+<div class="clock" id="clock">00:00</div>
+<button id="start" onclick="start()">Inquiry arrived — start</button>
+<button id="stop" class="stop" onclick="stop()" style="display:none">Replied — stop</button>
+<div class="log" id="log"></div>
+<div class="avg" id="avg"></div>
+</div>
+<a class="cta" href="mailto:absbm14@gmail.com?subject=Response%20desk%20—%20our%20inquiries">▶ AlwaysBridal / QuoteFlow: the response desk that never sleeps</a>
+<footer>Free tool. Runs locally — nothing stored, nothing sent.</footer>
+</div>
+<script>
+let t0=null,timer=null,times=[];
+function fmt(s){return String(Math.floor(s/60)).padStart(2,'0')+':'+String(Math.floor(s%60)).padStart(2,'0');}
+function start(){t0=Date.now();timer=setInterval(()=>document.getElementById('clock').textContent=fmt((Date.now()-t0)/1000),500);
+document.getElementById('start').style.display='none';document.getElementById('stop').style.display='inline-block';}
+function stop(){clearInterval(timer);const s=(Date.now()-t0)/1000;times.push(s);
+const log=document.getElementById('log');const d=document.createElement('div');d.textContent='Reply #'+times.length+': '+fmt(s)+(s<300?' ✓ fast':(s<3600?' ⚠ getting slow':' ✗ the client is gone'));log.prepend(d);
+const avg=times.reduce((a,b)=>a+b,0)/times.length;
+document.getElementById('avg').textContent='Average: '+fmt(avg)+(times.length>=3?(avg<300?' — competitive':(avg<1800?' — losing some':' — losing most')):'');
+document.getElementById('clock').textContent='00:00';
+document.getElementById('start').style.display='inline-block';document.getElementById('stop').style.display='none';}
+</script></body></html>
