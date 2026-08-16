@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://jtabsbm.github.io/missed-call-cost/sitemap.xml
