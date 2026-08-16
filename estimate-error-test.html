@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Estimate Error Grader — what AI-drafted estimate mistakes cost a GC</title>
+<meta name="description" content="Free: grade your estimate-drafting process. AI-drafted estimates carry errors that cost bids. 60-second self-test. No signup.">
+<style>
+:root{--bg:#0a0e14;--card:#161b22;--border:#30363d;--txt:#e6edf3;--dim:#8b949e;--acc:#4fc3f7;--red:#f85149;--grn:#3fb950}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;display:flex;justify-content:center;padding:40px 16px}
+.wrap{max-width:640px;width:100%}
+h1{font-size:1.7rem;margin-bottom:6px;text-align:center}h1 span{color:var(--acc)}
+.sub{color:var(--dim);text-align:center;margin-bottom:28px;font-size:.95rem}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:14px}
+label{display:flex;gap:12px;align-items:flex-start;color:var(--txt);font-size:.95rem;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer}
+label:last-child{border-bottom:none}
+input{accent-color:var(--acc);margin-top:3px}
+.count{text-align:center;color:var(--dim);margin:18px 0}
+.count b{color:var(--grn);font-size:1.6rem}
+.cta{display:block;text-align:center;background:var(--acc);color:#001018;font-weight:700;padding:14px;border-radius:10px;text-decoration:none}
+footer{margin-top:24px;text-align:center;color:var(--dim);font-size:.8rem}
+</style></head>
+<body><div class="wrap">
+<h1>Estimate <span>Error Grader</span></h1>
+<p class="sub">6 checks your takeoff process either has or doesn't.</p>
+<div class="card" id="list"></div>
+<div class="count"><b id="n">0</b>/6 safeguards in place</div>
+<a class="cta" href="mailto:absbm14@gmail.com?subject=BidGuard%20—%20pre-send%20checks">▶ BidGuard: the free OSS pre-send check for AI-drafted estimates</a>
+<footer>Free tool. No signup. Runs locally in your browser.</footer>
+</div>
+<script>
+const ITEMS=[
+"Every AI-drafted line is traced back to the takeoff",
+"Quantity math re-run independently before sending",
+"Unit costs checked against this quarter's supplier prices",
+"Past-due price-update flags reviewed",
+"Round-number lines get a second look (AI loves them)",
+"Someone other than the drafter reviews the final PDF"
+];
+const list=document.getElementById('list');
+ITEMS.forEach(t=>{const l=document.createElement('label');const c=document.createElement('input');c.type='checkbox';c.onchange=upd;l.appendChild(c);l.appendChild(document.createTextNode(t));list.appendChild(l);});
+function upd(){const n=document.querySelectorAll('input:checked').length;document.getElementById('n').textContent=n;
+document.querySelector('.count').style.color=n>=5?'var(--grn)':(n>=3?'#f0b429':'var(--red)');}
+</script></body></html>
