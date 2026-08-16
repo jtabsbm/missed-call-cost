@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lifecycle Gap Audit — which client cohorts sit dormant?</title>
+<meta name="description" content="Free: find the dormant lifecycle cohorts in your photography client base and what they're worth. No signup.">
+<style>
+:root{--bg:#0a0e14;--card:#161b22;--border:#30363d;--txt:#e6edf3;--dim:#8b949e;--acc:#4fc3f7;--red:#f85149}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;display:flex;justify-content:center;padding:40px 16px}
+.wrap{max-width:640px;width:100%}
+h1{font-size:1.7rem;margin-bottom:6px;text-align:center}h1 span{color:var(--acc)}
+.sub{color:var(--dim);text-align:center;margin-bottom:32px;font-size:.95rem}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:16px}
+label{display:block;color:var(--dim);font-size:.85rem;margin-bottom:8px;font-weight:600}
+.row{display:flex;gap:16px;flex-wrap:wrap}.field{flex:1;min-width:140px}
+input[type=number]{width:100%;background:#0d1117;border:1px solid var(--border);border-radius:8px;color:var(--txt);padding:12px;font-size:1.1rem}
+input:focus{outline:none;border-color:var(--acc)}
+.result{margin-top:24px;text-align:center;padding:28px;border-radius:12px;background:linear-gradient(135deg,#1a0f0f,#161b22);border:1px solid #f8514944}
+.big{font-size:2.8rem;font-weight:800;color:var(--red);margin:8px 0;font-variant-numeric:tabular-nums}
+.breakdown{color:var(--dim);font-size:.9rem}
+.cta{display:block;margin-top:24px;text-align:center;background:var(--acc);color:#001018;font-weight:700;padding:14px;border-radius:10px;text-decoration:none}
+footer{margin-top:24px;text-align:center;color:var(--dim);font-size:.8rem}
+</style></head>
+<body><div class="wrap">
+<h1>Lifecycle <span>Gap Audit</span></h1>
+<p class="sub">The clients who already hired you once — and lapsed at their natural next moment.</p>
+<div class="card">
+<div class="row">
+<div class="field"><label>Clients in past 3 years</label><input type="number" id="clients" value="150" min="1"></div>
+<div class="field"><label>% who rebooked naturally</label><input type="number" id="rebook" value="20" min="0" max="95"></div>
+</div>
+<div class="row" style="margin-top:16px">
+<div class="field"><label>Average session value ($)</label><input type="number" id="value" value="450" min="1"></div>
+<div class="field"><label>Trigger-rebooking rate (%)</label><input type="number" id="trigger" value="15" min="1" max="60"></div>
+</div>
+</div>
+<div class="result">
+<div style="color:var(--dim);font-size:.85rem;text-transform:uppercase;letter-spacing:.08em">Dormant rebooking value</div>
+<div class="big" id="dormant">$—</div>
+<div class="breakdown" id="families">— families at their natural next moment</div>
+<div class="breakdown" id="recoverable"></div>
+</div>
+<a class="cta" href="mailto:absbm14@gmail.com?subject=LifeLoop%20—%20work%20the%20lifecycle">▶ LifeLoop: the cohort comeback system ($99/mo)</a>
+<footer>Free tool. No signup. Math: clients × (1 − natural%) × trigger% × value = recovered bookings/yr.</footer>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+function calc(){
+const c=+$('clients').value||0,r=(+$('rebook').value||0)/100,v=+$('value').value||0,t=(+$('trigger').value||0)/100;
+const dormant=Math.round(c*(1-r));
+const recovered=dormant*t*v;
+$('dormant').textContent='$'+Math.round(recovered).toLocaleString();
+$('families').textContent=dormant+' families at their natural next moment';
+$('recoverable').textContent='≈ '+Math.round(dormant*t)+' recoverable rebookings/yr with timed triggers';
+}
+['clients','rebook','value','trigger'].forEach(i=>$(i).addEventListener('input',calc));calc();
+</script></body></html>
