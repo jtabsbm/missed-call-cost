@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Parts-Run Leak Calculator — what supply-house runs cost your crews</title>
+<meta name="description" content="Free calculator: crew hours and dollars lost to supply-house runs per month. For handyman and contractor operations. No signup.">
+<style>
+:root{--bg:#0a0e14;--card:#161b22;--border:#30363d;--txt:#e6edf3;--dim:#8b949e;--acc:#4fc3f7;--red:#f85149}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;display:flex;justify-content:center;padding:40px 16px}
+.wrap{max-width:640px;width:100%}
+h1{font-size:1.7rem;margin-bottom:6px;text-align:center}h1 span{color:var(--acc)}
+.sub{color:var(--dim);text-align:center;margin-bottom:32px;font-size:.95rem}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:16px}
+label{display:block;color:var(--dim);font-size:.85rem;margin-bottom:8px;font-weight:600}
+.row{display:flex;gap:16px;flex-wrap:wrap}.field{flex:1;min-width:140px}
+input[type=number]{width:100%;background:#0d1117;border:1px solid var(--border);border-radius:8px;color:var(--txt);padding:12px;font-size:1.1rem}
+input:focus{outline:none;border-color:var(--acc)}
+.result{margin-top:24px;text-align:center;padding:28px;border-radius:12px;background:linear-gradient(135deg,#1a0f0f,#161b22);border:1px solid #f8514944}
+.big{font-size:2.8rem;font-weight:800;color:var(--red);margin:8px 0;font-variant-numeric:tabular-nums}
+.breakdown{color:var(--dim);font-size:.9rem}
+.cta{display:block;margin-top:24px;text-align:center;background:var(--acc);color:#001018;font-weight:700;padding:14px;border-radius:10px;text-decoration:none}
+footer{margin-top:24px;text-align:center;color:var(--dim);font-size:.8rem}
+</style></head>
+<body><div class="wrap">
+<h1>Parts-Run <span>Leak Calculator</span></h1>
+<p class="sub">Every hour a crew sits in a supply-house lot bills to nobody.</p>
+<div class="card">
+<div class="row">
+<div class="field"><label>Supply runs per week (all crews)</label><input type="number" id="runs" value="10" min="1"></div>
+<div class="field"><label>Avg minutes per run</label><input type="number" id="mins" value="45" min="5"></div>
+</div>
+<div class="row" style="margin-top:16px">
+<div class="field"><label>Loaded crew hourly cost ($)</label><input type="number" id="rate" value="85" min="1"></div>
+<div class="field"><label>Crew size per run</label><input type="number" id="crew" value="1" min="1" max="4"></div>
+</div>
+</div>
+<div class="result">
+<div style="color:var(--dim);font-size:.85rem;text-transform:uppercase;letter-spacing:.08em">Lost to supply runs, per year</div>
+<div class="big" id="yearly">$—</div>
+<div class="breakdown" id="hours">— crew-hours in trucks and lots</div>
+<div class="breakdown" id="jobs">— billable jobs' worth of time</div>
+</div>
+<a class="cta" href="mailto:absbm14@gmail.com?subject=PartsRunner%20—%20audit%20our%20parts%20flow">▶ PartsRunner: the $490 audit that maps your parts flow for one week</a>
+<footer>Free tool. No signup. Math: runs × mins/60 × crew × rate × 52; jobs = hours ÷ 4.</footer>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+function calc(){
+const r=+$('runs').value||0,m=+$('mins').value||0,rt=+$('rate').value||0,c=+$('crew').value||1;
+const hours=r*m/60*c*52;
+const cost=hours*rt;
+$('yearly').textContent='$'+Math.round(cost).toLocaleString();
+$('hours').textContent=Math.round(hours).toLocaleString()+' crew-hours in trucks and lots';
+$('jobs').textContent=Math.round(hours/4)+' billable jobs\' worth of time';
+}
+['runs','mins','rate','crew'].forEach(i=>$(i).addEventListener('input',calc));calc();
+</script></body></html>
