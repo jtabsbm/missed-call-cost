@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inquiry Speed Grader — Weddings Are Won by the First Responder</title>
+<style>
+:root{--bg:#0a0e14;--card:#11161f;--line:#1e2733;--txt:#dce3ec;--dim:#8494a8;--acc:#39d98a;--acc2:#4da3ff;--warn:#f0b429;--bad:#e5484d}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;line-height:1.6}
+.wrap{max-width:880px;margin:0 auto;padding:40px 24px}
+h1{font-size:2rem;background:linear-gradient(90deg,#39d98a,#4da3ff);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:6px}
+.sub{color:var(--dim);margin-bottom:26px}
+label{display:block;color:var(--acc2);font-size:.85rem;margin:14px 0 4px;text-transform:uppercase;letter-spacing:.04em}
+input{width:100%;background:var(--card);border:1px solid var(--line);color:var(--txt);padding:10px 12px;border-radius:8px;font-size:1rem}
+input:focus{outline:none;border-color:var(--acc)}
+button{background:var(--acc);color:#04150c;font-weight:700;border:none;padding:12px 26px;border-radius:8px;font-size:1rem;margin:18px 0 8px;cursor:pointer}
+.out{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:20px;margin:14px 0}
+.big{font-size:2rem;font-weight:700}
+.grade{font-size:3rem;font-weight:800;float:right;margin-top:-6px}
+.row{display:flex;gap:14px;flex-wrap:wrap}
+.stat{flex:1;min-width:150px;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px}
+.stat .k{color:var(--dim);font-size:.78rem;text-transform:uppercase}
+.stat .v{font-size:1.3rem;font-weight:700}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:.9rem}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line)}
+th{color:var(--acc2)}td{color:var(--dim)}
+.note{color:var(--dim);font-size:.82rem;margin-top:10px}
+.footer{margin-top:40px;padding-top:18px;border-top:1px solid var(--line);color:var(--dim);font-size:.85rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>Inquiry Speed Grader</h1>
+<p class="sub">78% of couples book a vendor within 24 hours of their first inquiry round. If you reply in 6 hours, the wedding is usually already booked.</p>
+
+<label>Inquiries per month</label><input type="number" id="q" value="25" min="0">
+<label>Average package value ($)</label><input type="number" id="p" value="3200" min="0" step="100">
+<label>Your typical response time (hours)</label><input type="number" id="h" value="6" min="0" step="0.5">
+
+<button onclick="go()">Grade Me</button>
+<div id="res" style="display:none">
+<div class="out"><span class="grade" id="gr">A</span><div class="k" style="color:var(--dim);font-size:.8rem">ANNUAL REVENUE LOST TO SLOW REPLIES</div><div class="big" id="ann" style="color:var(--bad)">$0</div><div class="note" id="grnote"></div></div>
+<div class="row">
+<div class="stat"><div class="k">Lost bookings/month</div><div class="v" id="lb">0</div></div>
+<div class="stat"><div class="k">Your share of ideal</div><div class="v" id="sh">0%</div></div>
+<div class="stat"><div class="k">First-responder share</div><div class="v">100%</div></div>
+</div>
+<h3 style="color:var(--acc2);margin-top:18px">Levers, ranked by recovery</h3>
+<table><tr><th>Lever</th><th>Cost/mo</th><th>Recovers/yr</th><th>Note</th></tr><tbody id="fx"></tbody></table>
+<p class="note">Benchmark curve: 1h = 92% of ideal share, 2h = 78%, 4h = 58%, 6h = 44%, 12h = 25%, 24h = 12%. Base close rate 30%.</p>
+</div>
+
+<p class="sub" style="margin-top:14px">Open CLI: <b>inquiry_speed.py</b> in the repo.</p>
+<a href="mailto:absbm14@gmail.com?subject=Inquiry%20Speed%20Grader%20Analysis" style="display:inline-block;background:var(--acc);color:#04150c;font-weight:700;padding:11px 22px;border-radius:8px;text-decoration:none;margin-top:8px">Request an analysis &#8594;</a>
+<div class="footer">Built by James Thompson &middot; absbm14@gmail.com &middot; <a href="https://jtabsbm.github.io/callbackops-tools/" style="color:var(--acc2)">All tools</a></div>
+</div>
+<script>
+function fmt(n){return '$'+Math.round(n).toLocaleString()}
+function go(){
+var q=parseFloat(document.getElementById('q').value)||0,
+    p=parseFloat(document.getElementById('p').value)||0,
+    h=parseFloat(document.getElementById('h').value)||24;
+var curve=[[0.5,1.00],[1,0.92],[2,0.78],[4,0.58],[6,0.44],[12,0.25],[24,0.12],[48,0.04]];
+var share=0.02;
+for(var i=0;i<curve.length;i++){if(h<=curve[i][0]){share=curve[i][1];break}}
+var lost=q*0.30*(1.00-share), ann=lost*p*12;
+document.getElementById('res').style.display='block';
+document.getElementById('ann').textContent=fmt(ann);
+document.getElementById('lb').textContent=lost.toFixed(1);
+document.getElementById('sh').textContent=Math.round(share*100)+'%';
+var g=h<=1?'A':h<=2?'B':h<=4?'C':h<=6?'D':h<=12?'E':'F';
+var col=h<=2?'var(--acc)':h<=6?'var(--warn)':'var(--bad)';
+document.getElementById('gr').textContent=g;
+document.getElementById('gr').style.color=col;
+document.getElementById('grnote').textContent='Grade '+g+': '+(h<=1?'you are the first responder.':h<=4?'competitive but beatable.':'the wedding is booked before you reply.');
+var lev=[['Auto-acknowledgment + 24h promise',19,ann*0.55,'Instant reply holds the couple'],['Evening coverage extension',0,ann*0.30,'Couples inquire 6-10pm'],['Price-band instant answers',0,ann*0.20,'Kills the pricing dead zone']];
+var rows='';
+for(var i=0;i<lev.length;i++){
+ var pay=lev[i][1]===0?'instant':(lev[i][1]/(lev[i][2]/12)).toFixed(1)+' mo';
+ rows+='<tr><td>'+lev[i][0]+'</td><td>'+fmt(lev[i][1])+'</td><td>'+fmt(lev[i][2])+'</td><td>'+lev[i][3]+'</td></tr>';
+}
+document.getElementById('fx').innerHTML=rows;
+}
+go();
+</script>
+</body>
+</html>
