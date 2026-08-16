@@ -1,57 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Make-Good Liability Calculator — how much do you owe clients?</title>
-<meta name="description" content="Free calculator: untracked make-good credits and promised deliverables owed to clients. Find your agency's hidden liability. No signup.">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Make-Good Liability Calculator — how much do you owe clients in untracked credits?</title>
+<meta name="description" content="Free tool for agencies: calculate your annual make-good liability — the client credits you already owe but haven't tracked. 60 seconds, no signup.">
 <style>
-:root{--bg:#0a0e14;--card:#161b22;--border:#30363d;--txt:#e6edf3;--dim:#8b949e;--acc:#4fc3f7;--red:#f85149}
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;display:flex;justify-content:center;padding:40px 16px}
-.wrap{max-width:640px;width:100%}
-h1{font-size:1.7rem;margin-bottom:6px;text-align:center}h1 span{color:var(--acc)}
-.sub{color:var(--dim);text-align:center;margin-bottom:32px;font-size:.95rem}
-.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:16px}
-label{display:block;color:var(--dim);font-size:.85rem;margin-bottom:8px;font-weight:600}
-.row{display:flex;gap:16px;flex-wrap:wrap}.field{flex:1;min-width:140px}
-input[type=number]{width:100%;background:#0d1117;border:1px solid var(--border);border-radius:8px;color:var(--txt);padding:12px;font-size:1.1rem}
-input:focus{outline:none;border-color:var(--acc)}
-.result{margin-top:24px;text-align:center;padding:28px;border-radius:12px;background:linear-gradient(135deg,#1a0f0f,#161b22);border:1px solid #f8514944}
-.big{font-size:2.8rem;font-weight:800;color:var(--red);margin:8px 0;font-variant-numeric:tabular-nums}
-.breakdown{color:var(--dim);font-size:.9rem}
-.cta{display:block;margin-top:24px;text-align:center;background:var(--acc);color:#001018;font-weight:700;padding:14px;border-radius:10px;text-decoration:none}
-footer{margin-top:24px;text-align:center;color:var(--dim);font-size:.8rem}
-</style></head>
-<body><div class="wrap">
-<h1>Make-Good <span>Liability Calculator</span></h1>
-<p class="sub">Promised credits nobody tracked. Find your agency's number.</p>
-<div class="card">
-<div class="row">
-<div class="field"><label>Active clients</label><input type="number" id="clients" value="12" min="1"></div>
-<div class="field"><label>Make-good promises per client / yr</label><input type="number" id="promises" value="2" min="0"></div>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0b1020;color:#e8eaf0;font-family:'SF Mono',Consolas,Menlo,monospace;line-height:1.6;padding:48px 24px}
+.wrap{max-width:760px;margin:0 auto}
+.tag{color:#9fe870;font-size:13px;letter-spacing:2px;text-transform:uppercase}
+h1{font-size:32px;margin:12px 0 8px;line-height:1.2}
+.sub{color:#b8bdcf;font-size:16px;margin-bottom:28px}
+label{display:block;color:#9fe870;font-size:13px;margin:18px 0 6px;text-transform:uppercase;letter-spacing:1px}
+input[type=number]{width:100%;background:#11172b;border:1px solid #232c48;color:#e8eaf0;padding:12px 14px;border-radius:8px;font:inherit}
+input:focus{outline:none;border-color:#9fe870}
+.out{background:#11172b;border:1px solid #232c48;border-radius:10px;padding:22px;margin-top:26px}
+.big{font-size:38px;color:#9fe870;font-weight:700}
+.outlabel{color:#b8bdcf;font-size:14px}
+.row{display:flex;gap:16px;flex-wrap:wrap;margin-top:16px}
+.cell{flex:1;min-width:160px;background:#0b1020;border:1px solid #232c48;border-radius:8px;padding:14px}
+.cell .n{font-size:22px;color:#e8eaf0;font-weight:700}
+.note{color:#6b7290;font-size:13px;margin-top:18px}
+.cta{display:inline-block;background:#9fe870;color:#0b1020;padding:14px 28px;border-radius:8px;text-decoration:none;font-weight:700;margin-top:22px}
+.hide{display:none}
+footer{margin-top:40px;color:#6b7290;font-size:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<p class="tag">free tool · no signup · runs in your browser</p>
+<h1>Make-Good Liability Calculator</h1>
+<p class="sub">Agencies: the deliverables you missed this year already triggered credits you owe. Nobody tracked them. This is the number.</p>
+
+<label for="retainers">Active retainers</label>
+<input type="number" id="retainers" value="12" min="1">
+
+<label for="avgfee">Average retainer fee ($/month)</label>
+<input type="number" id="avgfee" value="3500" min="0" step="100">
+
+<label for="slas">Contractual deliverables promised per client / month</label>
+<input type="number" id="slas" value="20" min="1">
+
+<label for="missed">% of deliverables missed or late in a typical month</label>
+<input type="number" id="missed" value="8" min="0" max="100" step="1">
+
+<label for="creditrate">Contractual make-good rate (% of monthly fee at risk)</label>
+<input type="number" id="creditrate" value="10" min="0" max="100" step="1">
+
+<label for="tracked">% of triggered credits you actually track &amp; apply today</label>
+<input type="number" id="tracked" value="10" min="0" max="100" step="5">
+
+<div class="out" id="out">
+  <div class="outlabel">Your untracked make-good liability (per year)</div>
+  <div class="big" id="annual">$0</div>
+  <div class="row">
+    <div class="cell"><div class="outlabel">per month</div><div class="n" id="monthly">$0</div></div>
+    <div class="cell"><div class="outlabel">per client / year</div><div class="n" id="perclient">$0</div></div>
+    <div class="cell"><div class="outlabel">credits triggered but unlogged</div><div class="n" id="count">0</div></div>
+  </div>
+  <p class="note" id="verdict"></p>
+  <div id="cta" class="hide">
+    <a class="cta" href="mailto:absbm14@gmail.com?subject=Make-good%20liability%20—%20fix%20this">Get the credit ledger that fixes this →</a>
+  </div>
 </div>
-<div class="row" style="margin-top:16px">
-<div class="field"><label>Avg make-good value ($)</label><input type="number" id="value" value="1200" min="0"></div>
-<div class="field"><label>% tracked anywhere</label><input type="number" id="tracked" value="20" min="0" max="100"></div>
+
+<footer>Method: missed % × deliverables × clients = triggered credit events; liability = fee × make-good rate × (1 − % tracked) × 12. Estimates only — your contracts govern. Tool runs 100% locally; nothing is sent anywhere.</footer>
 </div>
-</div>
-<div class="result">
-<div style="color:var(--dim);font-size:.85rem;text-transform:uppercase;letter-spacing:.08em">Untracked liability, per year</div>
-<div class="big" id="liability">$—</div>
-<div class="breakdown" id="detail">—</div>
-<div class="breakdown" id="risk"></div>
-</div>
-<a class="cta" href="mailto:absbm14@gmail.com?subject=ClaimCycle%20—%20track%20our%20make-goods">▶ ClaimCycle: the $350 ledger that ends make-good drag</a>
-<footer>Free tool. No signup. Math: clients × promises × value × (1 − tracked%).</footer>
-</div>
+
 <script>
-const $=id=>document.getElementById(id);
+const ids=['retainers','avgfee','slas','missed','creditrate','tracked'];
+const $=i=>document.getElementById(i);
+function fmt(n){return '$'+Math.round(n).toLocaleString('en-US');}
 function calc(){
-const c=+$('clients').value||0,p=+$('promises').value||0,v=+$('value').value||0,t=(+$('tracked').value||0)/100;
-const total=c*p*v, untracked=total*(1-t);
-$('liability').textContent='$'+Math.round(untracked).toLocaleString();
-$('detail').textContent=Math.round(c*p*(1-t))+' untracked promises · $'+v.toLocaleString()+' avg';
-$('risk').textContent= untracked>10000 ? '⚠ renewal-negotiation hazard' : 'manageable — keep it that way';
+  const r=+ $('retainers').value||0, f=+$('avgfee').value||0, s=+$('slas').value||0,
+        m=(+$('missed').value||0)/100, c=(+$('creditrate').value||0)/100, t=(+$('tracked').value||0)/100;
+  const monthly=r*f*c*(1-t);
+  const events=r*s*m*12*(1-t);
+  $('monthly').textContent=fmt(monthly);
+  $('annual').textContent=fmt(monthly*12);
+  $('perclient').textContent=fmt(r?monthly*12/r:0);
+  $('count').textContent=Math.round(events);
+  let v='';
+  if(monthly*12>50000)v='That is a lawsuit waiting for a plaintiff — and an audit trail you cannot produce.';
+  else if(monthly*12>12000)v='That is a senior hire\u2019s salary leaking out in silent obligations.';
+  else if(monthly*12>3000)v='Material enough that a client with a good lawyer will find it before you do.';
+  else v='Small enough to fix this quarter, before a client\u2019s CFO does the same math.';
+  $('verdict').textContent=v;
+  $('cta').classList.remove('hide');
 }
-['clients','promises','value','tracked'].forEach(i=>$(i).addEventListener('input',calc));calc();
-</script></body></html>
+ids.forEach(i=>$(i).addEventListener('input',calc));
+calc();
+</script>
+</body>
+</html>
