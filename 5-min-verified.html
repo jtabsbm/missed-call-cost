@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>5-Minute Verified — Badge Assets &amp; Embed</title>
+<style>
+  :root{
+    --bg:#0b0f14; --panel:#121820; --panel2:#0e141b; --line:#1e2933;
+    --ink:#e8eef4; --dim:#8fa0b0; --green:#2fd67b; --green-dk:#158f4e;
+    --amber:#f0b429; --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;padding:48px 20px 80px}
+  .wrap{max-width:960px;margin:0 auto}
+  h1{font-size:28px;letter-spacing:-.02em}
+  h1 .pill{font-size:12px;vertical-align:middle;margin-left:10px;background:rgba(47,214,123,.12);color:var(--green);border:1px solid rgba(47,214,123,.35);padding:3px 10px;border-radius:99px;font-weight:600;letter-spacing:.08em}
+  .sub{color:var(--dim);margin:8px 0 40px;max-width:64ch}
+  h2{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:48px 0 18px;border-bottom:1px solid var(--line);padding-bottom:10px}
+  .row{display:flex;gap:28px;flex-wrap:wrap;align-items:flex-end}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:28px;flex:1;min-width:220px;text-align:center}
+  .card .size{color:var(--dim);font-size:12px;letter-spacing:.1em;text-transform:uppercase;margin-top:14px}
+  .use{color:var(--dim);font-size:13px;margin-top:4px}
+  .pending .badge-ring{stroke:#5a6773 !important}
+  .pending .badge-txt{fill:#aab6c2 !important}
+  .pending .badge-year{fill:#8b98a5 !important}
+  .pending .bolt{fill:#8b98a5 !important}
+  .blurb{background:var(--panel2);border:1px solid var(--line);border-left:3px solid var(--green);border-radius:10px;padding:20px 24px;max-width:76ch}
+  .blurb b{color:var(--green)}
+  .embedbox{position:relative;background:#0a0e12;border:1px solid var(--line);border-radius:12px;padding:18px;margin-top:14px}
+  pre{font-family:var(--mono);font-size:12.5px;line-height:1.55;color:#c8d6e2;white-space:pre;overflow-x:auto}
+  .copy{position:absolute;top:10px;right:10px;background:#1a2430;color:var(--ink);border:1px solid #2a3a4a;border-radius:8px;padding:6px 14px;font-size:12.5px;cursor:pointer}
+  .copy:hover{background:#22303f}
+  .ok{color:var(--green) !important}
+  table{width:100%;border-collapse:collapse;font-size:14.5px;margin-top:8px}
+  th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line)}
+  th{color:var(--dim);font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+  td.num{font-family:var(--mono)}
+  .foot{color:var(--dim);font-size:13px;margin-top:56px;border-top:1px solid var(--line);padding-top:18px}
+  a{color:var(--green)}
+  /* tooltip on the embed badge (hover, desktop) */
+  .cbv-tip{position:relative;display:inline-block}
+  .cbv-tip .cbv-tipbox{visibility:hidden;opacity:0;transition:opacity .15s;position:absolute;bottom:calc(100% + 10px);left:50%;transform:translateX(-50%);width:280px;background:#0e141b;color:var(--ink);border:1px solid #2a3a4a;border-radius:10px;padding:12px 14px;font-size:12.5px;line-height:1.5;text-align:left;box-shadow:0 8px 30px rgba(0,0,0,.5);z-index:9}
+  .cbv-tip:hover .cbv-tipbox{visibility:visible;opacity:1}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>5-Minute Verified <span class="pill">BADGE ASSETS</span></h1>
+  <p class="sub">The embeddable proof for businesses that passed the 7-day response-time audit.
+  Median callback under 5 minutes during business hours, p95 under 15, zero misses over an
+  hour — measured, not promised. <a href="VERIFIED-DIRECTORY.md">See the verified directory →</a></p>
+
+  <!-- ================= BADGE SIZES ================= -->
+  <h2>The badge — three sizes</h2>
+  <div class="row">
+
+    <!-- SIZE 1: compact 88px -->
+    <div class="card">
+      <svg width="88" height="88" viewBox="0 0 200 200" role="img" aria-label="5-Minute Verified badge, 2026">
+        <title>5-Minute Verified 2026: median first-callback under 5 minutes in business hours, measured over a 7-day audit</title>
+        <circle cx="100" cy="100" r="94" fill="#0e141b" stroke="#1e2933" stroke-width="4"/>
+        <circle class="badge-ring" cx="100" cy="100" r="84" fill="none" stroke="#2fd67b" stroke-width="9"/>
+        <circle cx="100" cy="100" r="72" fill="none" stroke="#1a2430" stroke-width="2"/>
+        <text class="badge-txt" x="100" y="88" text-anchor="middle" fill="#e8eef4" font-family="system-ui,Segoe UI,Roboto,sans-serif" font-size="42" font-weight="800">5-MIN</text>
+        <text class="badge-txt" x="100" y="116" text-anchor="middle" fill="#2fd67b" font-family="system-ui,Segoe UI,Roboto,sans-serif" font-size="22" font-weight="700" letter-spacing="4">VERIFIED</text>
+        <rect x="70" y="130" width="60" height="22" rx="11" fill="none" stroke="#2fd67b" stroke-width="2"/>
+        <text class="badge-year" x="100" y="146" text-anchor="middle" fill="#e8eef4" font-family="ui-monospace,Menlo,monospace" font-size="15" font-weight="700">2026</text>
+      </svg>
+      <div class="size">Compact · 88px</div>
+      <div class="use">Header strips, email signatures, social avatars</div>
+    </div>
+
+    <!-- SIZE 2: standard 140px (the canonical embed) -->
+    <div class="card">
+      <svg width="140" height="140" viewBox="0 0 200 200" role="img" aria-label="5-Minute Verified badge, 2026">
+        <title>5-Minute Verified 2026: median first-callback under 5 minutes in business hours, measured over a 7-day audit</title>
+        <circle cx="100" cy="100" r="94" fill="#0e141b" stroke="#1e2933" stroke-width="4"/>
+        <circle class="badge-ring" cx="100" cy="100" r="84" fill="none" stroke="#2fd67b" stroke-width="9"/>
+        <circle cx="100" cy="100" r="72" fill="none" stroke="#1a2430" stroke-width="2"/>
+        <path class="bolt" d="M104 18 L88 46 L102 46 L96 64 L118 36 L103 36 Z" fill="#2fd67b"/>
+        <text class="badge-txt" x="100" y="94" text-anchor="middle" fill="#e8eef4" font-family="system-ui,Segoe UI,Roboto,sans-serif" font-size="38" font-weight="800">5-MIN</text>
+        <text class="badge-txt" x="100" y="122" text-anchor="middle" fill="#2fd67b" font-family="system-ui,Segoe UI,Roboto,sans-serif" font-size="21" font-weight="700" letter-spacing="4">VERIFIED</text>
+        <rect x="70" y="136" width="60" height="22" rx="11" fill="none" stroke="#2fd67b" stroke-width="2"/>
+        <text class="badge-year" x="100" y="152" text-anchor="middle" fill="#e8eef4" font-family="ui-monospace,Menlo,monospace" font-size="15" font-weight="700">2026</text>
+      </svg>
+      <div class="size">Standard · 140px</div>
+      <div class="use">Footers, sidebars, contact pages — the default embed</div>
+    </div>
+
+    <!-- SIZE 3: display 240px -->
+    <div class="card">
+      <svg width="240" height="240" viewBox="0 0 200 200" role="img" aria-label="5-Minute Verified badge, 2026">
+        <title>5-Minute Verified 2026: median first-callback under 5 minutes in business hours, measured over a 7-day audit</title>
+        <circle cx="100" cy="100" r="94" fill="#0e141b" stroke="#1e2933" stroke-width="4"/>
+        <circle class="badge-ring" cx="100" cy="100" r="84" fill="none" stroke="#2fd67b" stroke-width="9"/>
+        <circle cx="100" cy="100" r="72" fill="none" stroke="#1a3a2a" stroke-width="2"/>
+        <path class="bolt" d="M104 14 L86 46 L101 46 L94 66 L119 35 L103 35 Z" fill="#2fd67b"/>
+        <text class="badge-txt" x="100" y="92" text-anchor="middle" fill="#e8eef4" font-family="system-ui,Segoe UI,Roboto,sans-serif" font-size="40" font-weight="800">5-MIN</text>
+        <text class="badge-txt" x="100" y="121" text-anchor="middle" fill="#2fd67b" font-family="system-ui,Segoe UI,Roboto,sans-serif" font-size="22" font-weight="700" letter-spacing="4">VERIFIED</text>
+        <rect x="69" y="136" width="62" height="22" rx="11" fill="none" stroke="#2fd67b" stroke-width="2"/>
+        <text class="badge-year" x="100" y="152" text-anchor="middle" fill="#e8eef4" font-family="ui-monospace,Menlo,monospace" font-size="15" font-weight="700">2026</text>
+      </svg>
+      <div class="size">Display · 240px</div>
+      <div class="use">Landing pages, printed material, trade-show assets</div>
+    </div>
+  </div>
+
+  <div class="row" style="margin-top:18px">
+    <!-- PENDING variant -->
+    <div class="card pending" style="flex:1">
+      <svg width="110" height="110" viewBox="0 0 200 200" role="img" aria-label="Audit pending badge">
+        <title>Audit pending — this business has entered the 7-day verification program but has not passed yet</title>
+        <circle cx="100" cy="100" r="94" fill="#0e141b" stroke="#1e2933" stroke-width="4"/>
+        <circle class="badge-ring" cx="100" cy="100" r="84" fill="none" stroke="#5a6773" stroke-width="9"/>
+        <circle cx="100" cy="100" r="72" fill="none" stroke="#1a2430" stroke-width="2"/>
+        <text class="badge-txt" x="100" y="90" text-anchor="middle" fill="#aab6c2" font-family="system-ui,Segoe UI,Roboto,sans-serif" font-size="26" font-weight="800">AUDIT</text>
+        <text class="badge-txt" x="100" y="118" text-anchor="middle" fill="#aab6c2" font-family="system-ui,Segoe UI,Roboto,sans-serif" font-size="22" font-weight="700" letter-spacing="3">PENDING</text>
+      </svg>
+      <div class="size" style="color:var(--amber)">Pending · gray</div>
+      <div class="use">Directory only — never embed until the audit passes</div>
+    </div>
+  </div>
+
+  <!-- ================= WHAT THIS MEANS ================= -->
+  <h2>What this means</h2>
+  <div class="blurb">
+    <b>What the badge means:</b> an independent 7-day audit of this business's callback log
+    found that, during its posted business hours, the <b>median missed call, web form, or
+    message was answered by a human in under 5 minutes</b>, 95% were answered in under 15
+    minutes, and <b>not one went an hour without a response</b>.
+    <br><br>
+    <b>What it does not mean:</b> it is not a guarantee, not a rank, not a review of the
+    business's work — it certifies one measurable behavior over one week, and it is
+    <b>re-verified monthly and revocable</b>. A business displaying this badge has a live
+    directory entry proving its current status.
+    <br><br>
+    <b>The standard, in numbers:</b>
+    <table>
+      <tr><th>Metric (business-hours first-callback lag)</th><th>Threshold</th></tr>
+      <tr><td>Median</td><td class="num">&lt; 5 min</td></tr>
+      <tr><td>95th percentile</td><td class="num">&lt; 15 min</td></tr>
+      <tr><td>Events over 60 min</td><td class="num">0</td></tr>
+      <tr><td>Measurement</td><td class="num">7-day audit · monthly re-verification</td></tr>
+    </table>
+  </div>
+
+  <!-- ================= EMBED CODE ================= -->
+  <h2>Copy-paste embed code (standard 140px, with tooltip)</h2>
+  <p style="color:var(--dim);font-size:14px">Paste anywhere in your HTML. The
+  <code>&lt;title&gt;</code> inside the SVG gives a native tooltip on hover; the CSS class
+  below adds a richer hover box on desktop. Link target: your directory entry.</p>
+
+  <div class="embedbox">
+    <button class="copy" onclick="cp(this)">Copy</button>
+<pre id="embed-code">&lt;!-- 5-Minute Verified badge — 2026 — replace DIRECTORY-URL with your entry link --&gt;
+&lt;a href="DIRECTORY-URL" class="cbv-tip" style="display:inline-block;width:140px;height:140px;text-decoration:none"
+   target="_blank" rel="noopener"&gt;
+  &lt;svg viewBox="0 0 200 200" width="140" height="140" role="img" aria-label="5-Minute Verified badge, 2026"&gt;
+    &lt;title&gt;5-Minute Verified: median first-callback under 5 minutes in business hours, p95 under 15, zero over 60 — measured in an independent 7-day audit, re-verified monthly.&lt;/title&gt;
+    &lt;circle cx="100" cy="100" r="94" fill="#0e141b" stroke="#1e2933" stroke-width="4"/&gt;
+    &lt;circle cx="100" cy="100" r="84" fill="none" stroke="#2fd67b" stroke-width="9"/&gt;
+    &lt;circle cx="100" cy="100" r="72" fill="none" stroke="#1a2430" stroke-width="2"/&gt;
+    &lt;path d="M104 14 L86 46 L101 46 L94 66 L119 35 L103 35 Z" fill="#2fd67b"/&gt;
+    &lt;text x="100" y="92" text-anchor="middle" fill="#e8eef4" font-family="system-ui,sans-serif" font-size="40" font-weight="800"&gt;5-MIN&lt;/text&gt;
+    &lt;text x="100" y="121" text-anchor="middle" fill="#2fd67b" font-family="system-ui,sans-serif" font-size="22" font-weight="700" letter-spacing="4"&gt;VERIFIED&lt;/text&gt;
+    &lt;rect x="69" y="136" width="62" height="22" rx="11" fill="none" stroke="#2fd67b" stroke-width="2"/&gt;
+    &lt;text x="100" y="152" text-anchor="middle" fill="#e8eef4" font-family="ui-monospace,Menlo,monospace" font-size="15" font-weight="700"&gt;2026&lt;/text&gt;
+  &lt;/svg&gt;
+  &lt;span class="cbv-tipbox"&gt;&lt;b&gt;5-Minute Verified&lt;/b&gt; — median callback under 5 min in business hours, p95 under 15, none over an hour. Independent 7-day audit, re-verified monthly. Click for the live record.&lt;/span&gt;
+&lt;/a&gt;
+&lt;style&gt;.cbv-tip{position:relative;display:inline-block}.cbv-tip .cbv-tipbox{visibility:hidden;opacity:0;transition:opacity .15s;position:absolute;bottom:calc(100% + 10px);left:50%;transform:translateX(-50%);width:280px;background:#0e141b;color:#e8eef4;border:1px solid #2a3a4a;border-radius:10px;padding:12px 14px;font-size:12.5px;line-height:1.5;font-family:system-ui,sans-serif;box-shadow:0 8px 30px rgba(0,0,0,.5);z-index:9}.cbv-tip:hover .cbv-tipbox{visibility:visible;opacity:1}&lt;/style&gt;</pre>
+  </div>
+
+  <h2>Live preview of the embed</h2>
+  <div class="card" style="text-align:center">
+    <div id="embed-preview"><!-- rendered by JS below --></div>
+  </div>
+
+  <div class="foot">
+    Badge art and page are original works of the 5-Minute Verified program (CallbackOps).
+    The badge may only be displayed by a business with a current passing audit; misuse is
+    handled per <a href="CERTIFY.md">CERTIFY.md</a>. No tracking, no scripts loaded from
+    third parties — the embed is pure inline SVG.
+    · <a href="CERTIFY.md">Program</a> · <a href="AUDIT-PROTOCOL.md">Audit protocol</a> ·
+    <a href="VERIFIED-DIRECTORY.md">Directory</a>
+  </div>
+</div>
+
+<script>
+// Render the embed snippet live so it can be eyeballed before shipping.
+document.getElementById('embed-preview').innerHTML =
+  document.getElementById('embed-code').textContent
+    .replace('DIRECTORY-URL','#directory');
+function cp(btn){
+  const txt = document.getElementById('embed-code').textContent;
+  navigator.clipboard.writeText(txt).then(function(){
+    btn.textContent='Copied ✓';btn.classList.add('ok');
+    setTimeout(function(){btn.textContent='Copy';btn.classList.remove('ok')},1400);
+  });
+}
+</script>
+</body>
+</html>
