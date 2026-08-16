@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RFP Miss Cost Calculator — what skipping bids costs a small carrier</title>
+<meta name="description" content="Free: what skipping RFP bids costs a small carrier or service business per year. No signup.">
+<style>
+:root{--bg:#0a0e14;--card:#161b22;--border:#30363d;--txt:#e6edf3;--dim:#8b949e;--acc:#4fc3f7;--red:#f85149}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;display:flex;justify-content:center;padding:40px 16px}
+.wrap{max-width:640px;width:100%}
+h1{font-size:1.7rem;margin-bottom:6px;text-align:center}h1 span{color:var(--acc)}
+.sub{color:var(--dim);text-align:center;margin-bottom:32px;font-size:.95rem}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:16px}
+label{display:block;color:var(--dim);font-size:.85rem;margin-bottom:8px;font-weight:600}
+.row{display:flex;gap:16px;flex-wrap:wrap}.field{flex:1;min-width:140px}
+input[type=number]{width:100%;background:#0d1117;border:1px solid var(--border);border-radius:8px;color:var(--txt);padding:12px;font-size:1.1rem}
+input:focus{outline:none;border-color:var(--acc)}
+.result{margin-top:24px;text-align:center;padding:28px;border-radius:12px;background:linear-gradient(135deg,#1a0f0f,#161b22);border:1px solid #f8514944}
+.big{font-size:2.8rem;font-weight:800;color:var(--red);margin:8px 0;font-variant-numeric:tabular-nums}
+.breakdown{color:var(--dim);font-size:.9rem}
+.cta{display:block;margin-top:24px;text-align:center;background:var(--acc);color:#001018;font-weight:700;padding:14px;border-radius:10px;text-decoration:none}
+footer{margin-top:24px;text-align:center;color:var(--dim);font-size:.8rem}
+</style></head>
+<body><div class="wrap">
+<h1>RFP Miss <span>Cost Calculator</span></h1>
+<p class="sub">The bids you never saw — or saw too late.</p>
+<div class="card">
+<div class="row">
+<div class="field"><label>Fits-your-lane RFPs per year</label><input type="number" id="rfps" value="20" min="0"></div>
+<div class="field"><label>% you currently catch in time</label><input type="number" id="caught" value="30" min="0" max="100"></div>
+</div>
+<div class="row" style="margin-top:16px">
+<div class="field"><label>Avg contract value ($)</label><input type="number" id="value" value="35000" min="0"></div>
+<div class="field"><label>Realistic win rate (%)</label><input type="number" id="win" value="15" min="1" max="60"></div>
+</div>
+</div>
+<div class="result">
+<div style="color:var(--dim);font-size:.85rem;text-transform:uppercase;letter-spacing:.08em">Missed contract value</div>
+<div class="big" id="missed">$—</div>
+<div class="breakdown" id="count">— winnable bids missed/yr</div>
+<div class="breakdown" id="note"></div>
+</div>
+<a class="cta" href="mailto:absbm14@gmail.com?subject=RFP%20Radar%20—%20sign%20us%20up">▶ RFP Radar: the weekly issue that does the bid-desk work ($19/mo)</a>
+<footer>Free tool. No signup. Math: RFPs × missed% × win% × value.</footer>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+function calc(){
+const r=+$('rfps').value||0,c=(+$('caught').value||0)/100,v=+$('value').value||0,w=(+$('win').value||0)/100;
+const missed=r*(1-c), winnable=missed*w, value=winnable*v;
+$('missed').textContent='$'+Math.round(value).toLocaleString();
+$('count').textContent=winnable.toFixed(1)+' winnable bids missed/yr';
+$('note').textContent = value>50000 ? '⚠ that is a full-time salary in missed contracts' : 'compounding quietly every quarter';
+}
+['rfps','caught','value','win'].forEach(i=>$(i).addEventListener('input',calc));calc();
+</script></body></html>
