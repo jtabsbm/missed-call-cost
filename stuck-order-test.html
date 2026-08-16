@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stuck-Order Self-Test — is your store leaking silent integration breaks?</title>
+<meta name="description" content="Free 5-question self-test: silent integration failures in a DTC store — stuck orders, dead webhooks, silent sync breaks. No signup.">
+<style>
+:root{--bg:#0a0e14;--card:#161b22;--border:#30363d;--txt:#e6edf3;--dim:#8b949e;--acc:#4fc3f7;--red:#f85149;--grn:#3fb950}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;display:flex;justify-content:center;padding:40px 16px}
+.wrap{max-width:640px;width:100%}
+h1{font-size:1.7rem;margin-bottom:6px;text-align:center}h1 span{color:var(--acc)}
+.sub{color:var(--dim);text-align:center;margin-bottom:28px;font-size:.95rem}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:14px}
+.q{color:var(--txt);font-size:1rem;margin-bottom:12px;font-weight:600}
+label{display:flex;align-items:center;gap:10px;color:var(--dim);font-size:.9rem;padding:8px 12px;border:1px solid var(--border);border-radius:8px;margin:6px 0;cursor:pointer}
+label:hover{border-color:var(--acc)}
+input[type=radio]{accent-color:var(--acc)}
+.result{margin-top:24px;text-align:center;padding:28px;border-radius:12px;background:linear-gradient(135deg,#1a0f0f,#161b22);border:1px solid #f8514944;display:none}
+.big{font-size:2.6rem;font-weight:800;margin:8px 0}
+.verdict{font-size:1rem;margin-bottom:8px}
+.breakdown{color:var(--dim);font-size:.9rem}
+.cta{display:block;margin-top:24px;text-align:center;background:var(--acc);color:#001018;font-weight:700;padding:14px;border-radius:10px;text-decoration:none}
+footer{margin-top:24px;text-align:center;color:var(--dim);font-size:.8rem}
+</style></head>
+<body><div class="wrap">
+<h1>Stuck-Order <span>Self-Test</span></h1>
+<p class="sub">5 questions. Integration breaks are silent until a customer emails.</p>
+<div class="card" id="quiz"></div>
+<div class="result" id="res">
+<div class="verdict" id="verdict"></div>
+<div class="big" id="score">0/10</div>
+<div class="breakdown" id="note"></div>
+<a class="cta" href="mailto:absbm14@gmail.com?subject=SyncSentry%20—%20watch%20our%20orders">▶ SyncSentry: the watchdog that bills only on recovered revenue (10%)</a>
+</div>
+<footer>Free tool. No signup. Everything runs locally.</footer>
+</div>
+<script>
+const QS=[
+["How do you learn an order is stuck?",["Alert/monitoring","Customer email","Social media"]],
+["Your store↔fulfillment sync last failed:",["Never noticed a failure","Months ago, fixed manually","Recently, still flaky"]],
+["Webhook failures get:",["Retried + alerted","Silently dropped","We don't track them"]],
+["Inventory oversells happen:",["Never","Rarely, we refund","Often enough to hurt"]],
+["A killed integration costs you:",["We know precisely","A rough guess","Whatever the email says"]]
+];
+const V=[2,0,-2];
+const quiz=document.getElementById('quiz');
+QS.forEach((q,qi)=>{
+const d=document.createElement('div');d.className='q';d.textContent=(qi+1)+'. '+q[0];quiz.appendChild(d);
+q[1].forEach((opt,oi)=>{const l=document.createElement('label');const r=document.createElement('input');r.type='radio';r.name='q'+qi;r.onchange=score;l.appendChild(r);l.appendChild(document.createTextNode(opt));quiz.appendChild(l);});
+});
+let done=false;
+function score(){
+if(document.querySelectorAll('input:checked').length<QS.length||done)return;done=true;
+let s=0;document.querySelectorAll('input:checked').forEach(a=>s+=V[+a.value]);
+document.getElementById('res').style.display='block';
+document.getElementById('score').textContent=s+'/10';
+const v=document.getElementById('verdict');
+if(s>=6){v.textContent='✓ Watched';v.style.color='var(--grn)';document.getElementById('note').textContent='You already monitor — benchmark the coverage quarterly.';}
+else if(s>=2){v.textContent='⚠ Partial blindness';v.style.color='#f0b429';document.getElementById('note').textContent='The gaps are where stuck orders live.';}
+else{v.textContent='✗ Flying blind';v.style.color='var(--red)';document.getElementById('note').textContent='Every silent break is revenue leaking until someone complains.';}
+window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});
+}
+</script></body></html>
