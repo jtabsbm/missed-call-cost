@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Review-Gap Grader — you vs. your top competitor</title>
+<meta name="description" content="Free: compare your Google review count and rating against your top competitor. See the new-patient gap in dollars. No signup.">
+<style>
+:root{--bg:#0a0e14;--card:#161b22;--border:#30363d;--txt:#e6edf3;--dim:#8b949e;--acc:#4fc3f7;--red:#f85149;--grn:#3fb950}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;display:flex;justify-content:center;padding:40px 16px}
+.wrap{max-width:640px;width:100%}
+h1{font-size:1.7rem;margin-bottom:6px;text-align:center}h1 span{color:var(--acc)}
+.sub{color:var(--dim);text-align:center;margin-bottom:32px;font-size:.95rem}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:16px}
+label{display:block;color:var(--dim);font-size:.85rem;margin-bottom:8px;font-weight:600}
+.row{display:flex;gap:16px;flex-wrap:wrap}.field{flex:1;min-width:140px}
+input[type=number]{width:100%;background:#0d1117;border:1px solid var(--border);border-radius:8px;color:var(--txt);padding:12px;font-size:1.1rem}
+input:focus{outline:none;border-color:var(--acc)}
+.result{margin-top:24px;text-align:center;padding:28px;border-radius:12px;background:linear-gradient(135deg,#1a0f0f,#161b22);border:1px solid #f8514944}
+.big{font-size:2.8rem;font-weight:800;color:var(--red);margin:8px 0;font-variant-numeric:tabular-nums}
+.breakdown{color:var(--dim);font-size:.9rem}
+.cta{display:block;margin-top:24px;text-align:center;background:var(--acc);color:#001018;font-weight:700;padding:14px;border-radius:10px;text-decoration:none}
+footer{margin-top:24px;text-align:center;color:var(--dim);font-size:.8rem}
+.ok{color:var(--grn)}
+</style></head>
+<body><div class="wrap">
+<h1>Review-Gap <span>Grader</span></h1>
+<p class="sub">You vs. your top competitor — the numbers are public.</p>
+<div class="card">
+<div class="row">
+<div class="field"><label>YOUR review count</label><input type="number" id="mine" value="32" min="0"></div>
+<div class="field"><label>COMPETITOR review count</label><input type="number" id="theirs" value="214" min="0"></div>
+</div>
+<div class="row" style="margin-top:16px">
+<div class="field"><label>New clients/patients per month</label><input type="number" id="clients" value="25" min="1"></div>
+<div class="field"><label>Average client value ($)</label><input type="number" id="value" value="900" min="1"></div>
+</div>
+</div>
+<div class="result">
+<div style="color:var(--dim);font-size:.85rem;text-transform:uppercase;letter-spacing:.08em">Review gap</div>
+<div class="big" id="gap">—</div>
+<div class="breakdown" id="share"></div>
+<div class="breakdown" id="dollar"></div>
+</div>
+<a class="cta" href="mailto:absbm14@gmail.com?subject=SpinBack%20—%20close%20the%20review%20gap">▶ SpinBack: the review pipeline that closes it ($99/mo)</a>
+<footer>Free tool. No signup. Near 4.8★, each star-tenth ≈ +10% new-client calls in local service niches.</footer>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+function calc(){
+const m=+$('mine').value||0,t=+$('theirs').value||0,c=+$('clients').value||0,v=+$('value').value||0;
+const gap=t-m;
+$('gap').textContent = gap>0 ? '−'+gap+' reviews' : 'you lead +'+(-gap);
+const share = t>0 ? Math.round(m/t*100) : 100;
+$('share').textContent = gap>0 ? 'you have '+share+'% of their review volume' : 'dominant position — defend it';
+const est = gap>0 ? Math.round(gap*0.008*c*v) : 0;
+$('dollar').innerHTML = gap>0 ? 'est. new-client flow difference: <b>$'+est.toLocaleString()+'/mo</b>' : '<span class="ok">keep asking systematically</span>';
+}
+['mine','theirs','clients','value'].forEach(i=>$(i).addEventListener('input',calc));calc();
+</script></body></html>
