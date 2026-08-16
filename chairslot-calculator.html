@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chair-Slot Leak Calculator — what no-shows cost an optometry practice</title>
+<meta name="description" content="Free calculator: revenue lost to exam no-shows per month. For optometry and medical practices. No signup.">
+<style>
+:root{--bg:#0a0e14;--card:#161b22;--border:#30363d;--txt:#e6edf3;--dim:#8b949e;--acc:#4fc3f7;--red:#f85149}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;display:flex;justify-content:center;padding:40px 16px}
+.wrap{max-width:640px;width:100%}
+h1{font-size:1.7rem;margin-bottom:6px;text-align:center}h1 span{color:var(--acc)}
+.sub{color:var(--dim);text-align:center;margin-bottom:32px;font-size:.95rem}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:16px}
+label{display:block;color:var(--dim);font-size:.85rem;margin-bottom:8px;font-weight:600}
+.row{display:flex;gap:16px;flex-wrap:wrap}.field{flex:1;min-width:140px}
+input[type=number]{width:100%;background:#0d1117;border:1px solid var(--border);border-radius:8px;color:var(--txt);padding:12px;font-size:1.1rem}
+input:focus{outline:none;border-color:var(--acc)}
+.result{margin-top:24px;text-align:center;padding:28px;border-radius:12px;background:linear-gradient(135deg,#1a0f0f,#161b22);border:1px solid #f8514944}
+.big{font-size:2.8rem;font-weight:800;color:var(--red);margin:8px 0;font-variant-numeric:tabular-nums}
+.breakdown{color:var(--dim);font-size:.9rem}
+.cta{display:block;margin-top:24px;text-align:center;background:var(--acc);color:#001018;font-weight:700;padding:14px;border-radius:10px;text-decoration:none}
+footer{margin-top:24px;text-align:center;color:var(--dim);font-size:.8rem}
+</style></head>
+<body><div class="wrap">
+<h1>Chair-Slot <span>Leak Calculator</span></h1>
+<p class="sub">An empty exam chair at 2pm is inventory that expired.</p>
+<div class="card">
+<div class="row">
+<div class="field"><label>Exam slots per week</label><input type="number" id="slots" value="80" min="1"></div>
+<div class="field"><label>No-show rate (%)</label><input type="number" id="rate" value="12" min="1" max="60"></div>
+</div>
+<div class="row" style="margin-top:16px">
+<div class="field"><label>Avg exam+eyewear revenue ($)</label><input type="number" id="rev" value="275" min="1"></div>
+<div class="field"><label>Rebook recovery rate (%)</label><input type="number" id="recov" value="25" min="0" max="90"></div>
+</div>
+</div>
+<div class="result">
+<div style="color:var(--dim);font-size:.85rem;text-transform:uppercase;letter-spacing:.08em">Annual chair-slot leak</div>
+<div class="big" id="yearly">$—</div>
+<div class="breakdown" id="slotslost">— dead slots/yr</div>
+<div class="breakdown" id="recoverable"></div>
+</div>
+<a class="cta" href="mailto:absbm14@gmail.com?subject=ExamHold%20—%20the%20no-show%20kit">▶ ExamHold: the $29 kit that fills the chairs (reminders + holds + rebooking)</a>
+<footer>Free tool. No signup. Math: slots × rate × 52 × revenue; net = leak × (1 − recovery).</footer>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+function calc(){
+const s=+$('slots').value||0,r=(+$('rate').value||0)/100,v=+$('rev').value||0,rc=(+$('recov').value||0)/100;
+const dead=s*r*52, leak=dead*v, net=leak*(1-rc);
+$('yearly').textContent='$'+Math.round(net).toLocaleString();
+$('slotslost').textContent=Math.round(dead)+' dead slots/yr';
+$('recoverable').textContent='≈ $'+Math.round(leak*0.4).toLocaleString()+' recoverable with holds + a rebooking flow';
+}
+['slots','rate','rev','recov'].forEach(i=>$(i).addEventListener('input',calc));calc();
+</script></body></html>
