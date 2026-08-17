@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Visit-2 Leak Quiz — does your service bring first-timers back?</title>
+<meta name="description" content="Free 6-question quiz: first-visit retention for salons, clinics, and local services. No signup.">
+<style>
+:root{--bg:#0a0e14;--card:#161b22;--border:#30363d;--txt:#e6edf3;--dim:#8b949e;--acc:#4fc3f7;--red:#f85149;--grn:#3fb950}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;display:flex;justify-content:center;padding:40px 16px}
+.wrap{max-width:640px;width:100%}
+h1{font-size:1.7rem;margin-bottom:6px;text-align:center}h1 span{color:var(--acc)}
+.sub{color:var(--dim);text-align:center;margin-bottom:28px;font-size:.95rem}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:14px}
+.q{color:var(--txt);font-size:1rem;margin-bottom:12px;font-weight:600}
+label{display:flex;align-items:center;gap:10px;color:var(--dim);font-size:.9rem;padding:8px 12px;border:1px solid var(--border);border-radius:8px;margin:6px 0;cursor:pointer}
+label:hover{border-color:var(--acc)}
+input[type=radio]{accent-color:var(--acc)}
+.result{margin-top:24px;text-align:center;padding:28px;border-radius:12px;background:linear-gradient(135deg,#1a0f0f,#161b22);border:1px solid #f8514944;display:none}
+.big{font-size:2.6rem;font-weight:800;margin:8px 0}
+.verdict{font-size:1rem;margin-bottom:8px}
+.cta{display:block;margin-top:24px;text-align:center;background:var(--acc);color:#001018;font-weight:700;padding:14px;border-radius:10px;text-decoration:none}
+footer{margin-top:24px;text-align:center;color:var(--dim);font-size:.8rem}
+</style></head>
+<body><div class="wrap">
+<h1>Visit-2 <span>Leak Quiz</span></h1>
+<p class="sub">The first visit is marketing. The second is the business.</p>
+<div class="card" id="quiz"></div>
+<div class="result" id="res">
+<div class="verdict" id="verdict"></div>
+<div class="big" id="score">0/12</div>
+<a class="cta" href="mailto:absbm14@gmail.com?subject=Visit-2%20retention%20—%20our%20numbers">▶ RebookLoop / SpinBack: the desk that closes the visit-2 gap</a>
+</div>
+<footer>Free tool. No signup. Runs locally.</footer>
+</div>
+<script>
+const QS=[
+["When a new client finishes visit 1, what happens?",["A rebook ask before they leave","A text within 48h","Nothing systematic"]],
+["Your visit-1 → visit-2 rate is:",["Tracked, we know it","A rough guess","Unknown"]],
+["First-timers get a follow-up review ask:",["At the gratitude peak","Whenever","Never"]],
+["Your booking confirmation includes:",["What to expect next visit","Logistics only","We don't send one"]],
+["No-shows get:",["A same-week rebook offer","A note in the file","Nothing"]],
+["Visit-3+ clients get occasional value touches:",["Yes, monthly-ish","Rarely","No"]]
+];
+const V=[2,0,-2];
+const quiz=document.getElementById('quiz');
+QS.forEach((q,qi)=>{
+const d=document.createElement('div');d.className='q';d.textContent=(qi+1)+'. '+q[0];quiz.appendChild(d);
+q[1].forEach((opt,oi)=>{const l=document.createElement('label');const r=document.createElement('input');r.type='radio';r.name='q'+qi;r.onchange=score;l.appendChild(r);l.appendChild(document.createTextNode(opt));quiz.appendChild(l);});
+});
+let done=false;
+function score(){
+if(document.querySelectorAll('input:checked').length<QS.length||done)return;done=true;
+let s=0;document.querySelectorAll('input:checked').forEach(a=>s+=V[+a.value]);
+document.getElementById('res').style.display='block';
+document.getElementById('score').textContent=s+'/12';
+const v=document.getElementById('verdict');
+if(s>=8){v.textContent='✓ Retention machine';v.style.color='var(--grn)';}
+else if(s>=3){v.textContent='⚠ Quiet leak';v.style.color='#f0b429';}
+else{v.textContent='✗ Bucket with holes';v.style.color='var(--red)';}
+window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});
+}
+</script></body></html>
