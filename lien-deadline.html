@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mechanics-Lien Deadline Calculator — how much of your AR is expiring?</title>
+<meta name="description" content="Free: unpaid invoices by lien-deadline risk. For contractors and subs. No signup, runs locally.">
+<style>
+:root{--bg:#0a0e14;--card:#161b22;--border:#30363d;--txt:#e6edf3;--dim:#8b949e;--acc:#4fc3f7;--red:#f85149}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;display:flex;justify-content:center;padding:40px 16px}
+.wrap{max-width:640px;width:100%}
+h1{font-size:1.7rem;margin-bottom:6px;text-align:center}h1 span{color:var(--acc)}
+.sub{color:var(--dim);text-align:center;margin-bottom:32px;font-size:.95rem}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:16px}
+label{display:block;color:var(--dim);font-size:.85rem;margin-bottom:8px;font-weight:600}
+.row{display:flex;gap:16px;flex-wrap:wrap}.field{flex:1;min-width:140px}
+input[type=number]{width:100%;background:#0d1117;border:1px solid var(--border);border-radius:8px;color:var(--txt);padding:12px;font-size:1.1rem}
+input[type=date]{width:100%;background:#0d1117;border:1px solid var(--border);border-radius:8px;color:var(--txt);padding:12px;font-size:1rem}
+.result{margin-top:24px;text-align:center;padding:28px;border-radius:12px;background:linear-gradient(135deg,#1a0f0f,#161b22);border:1px solid #f8514944}
+.big{font-size:2.8rem;font-weight:800;color:var(--red);margin:8px 0;font-variant-numeric:tabular-nums}
+.breakdown{color:var(--dim);font-size:.9rem}
+.cta{display:block;margin-top:24px;text-align:center;background:var(--acc);color:#001018;font-weight:700;padding:14px;border-radius:10px;text-decoration:none}
+footer{margin-top:24px;text-align:center;color:var(--dim);font-size:.8rem}
+</style></head>
+<body><div class="wrap">
+<h1>Lien-Deadline <span>Calculator</span></h1>
+<p class="sub">Unpaid invoices aren't just aging — they're expiring.</p>
+<div class="card">
+<div class="row">
+<div class="field"><label>Days since last work on project</label><input type="number" id="days" value="60" min="0"></div>
+<div class="field"><label>Your state's lien window (days)</label><input type="number" id="window" value="90" min="15" max="365"></div>
+</div>
+<div class="row" style="margin-top:16px">
+<div class="field"><label>Unpaid on that project ($)</label><input type="number" id="amount" value="18000" min="0"></div>
+</div>
+</div>
+<div class="result">
+<div style="color:var(--dim);font-size:.85rem;text-transform:uppercase;letter-spacing:.08em">Lien rights status</div>
+<div class="big" id="status">—</div>
+<div class="breakdown" id="detail">—</div>
+<div class="breakdown" id="risk"></div>
+</div>
+<a class="cta" href="mailto:absbm14@gmail.com?subject=ChaseSheet%20—%20our%20open%20invoices">▶ ChaseSheet: the $19 pack with verified AP contacts + deadline math</a>
+<footer>Free tool. General guide only — verify your state's current statute; not legal advice.</footer>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+function calc(){
+const d=+$('days').value||0,w=+$('window').value||90,a=+$('amount').value||0;
+const left=w-d;
+const s=$('status');
+if(left<=0){s.textContent='EXPIRED';s.style.color='var(--red)';$('detail').textContent='Lien rights likely lapsed — collection leverage gone';$('risk').textContent='$'+a.toLocaleString()+' now depends on goodwill alone';}
+else if(left<=30){s.textContent=left+' DAYS';s.style.color='var(--red)';$('detail').textContent='Lien window closing — Notice of Intent now';$('risk').textContent='$'+a.toLocaleString()+' at risk of losing its teeth';}
+else{s.textContent=left+' days left';s.style.color='#3fb950';$('detail').textContent='Window open — start the formal chase while it matters';$('risk').textContent='every week of delay burns leverage on $'+a.toLocaleString();}
+}
+['days','window','amount'].forEach(i=>$(i).addEventListener('input',calc));calc();
+</script></body></html>
